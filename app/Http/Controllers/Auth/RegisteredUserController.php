@@ -44,6 +44,12 @@ class RegisteredUserController extends Controller
             'role' => 'member',
         ]);
 
+        $user->anggota()->create([
+            'nama' => $request->nama_anggota,
+            'domisili' => $request->domisili,           
+        ]);
+        
+
         // Menyebarkan event registered
         event(new Registered($user));
 
