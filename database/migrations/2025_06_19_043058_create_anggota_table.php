@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('anggota', function (Blueprint $table) {
+        // dishcema aku nambahin 's' karena model laravel itu secara default mengenal nama table dengan tambahan s
+        //kalau gak sesuai kita harus definisiin lagi di model protected $table = 'anggota' 
+        Schema::create('anggotas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('nama');
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('anggota');
+        Schema::dropIfExists('anggotas');
     }
 };

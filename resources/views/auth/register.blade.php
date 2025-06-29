@@ -1,145 +1,178 @@
 <x-guest-layout>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background: url('{{ asset('images/bg.png') }}') no-repeat center center fixed;
-            background-size: cover;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .login-card {
-            width: 100%;
-            max-width: 500px;
-            background-color: rgba(0, 0, 0, 0.85);
-            padding: 30px;
-            border-radius: 12px;
-            color: #fff;
-            box-shadow: 0 0 25px rgba(183, 28, 28, 0.5);
-        }
-
-        .login-title {
-            text-align: center;
-            font-size: 2rem;
-            color: #e53935;
-            font-weight: bold;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            color: #e57373;
-            font-size: 0.9rem;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            background-color: rgb(148, 127, 127);
-            border: 1px solid #e53935;
-            color: white;
-        }
-
-        input::placeholder {
-            color: #aaa;
-        }
-
-        .login-button {
-            background-color: #b71c1c;
-            border: none;
-        }
-
-        .login-button:hover {
-            background-color: #d32f2f;
-        }
-
-     .logo img {
-    max-width: 350px; /* Sesuaikan ukuran logo */
-    margin-bottom: 10px;
-    display: block;  /* Membuat gambar menjadi block-level element */
-    margin-left: auto;  /* Menyelaraskan gambar ke kiri secara otomatis */
-    margin-right: auto;  /* Menyelaraskan gambar ke kanan secara otomatis */
-}
-
-        .forgot-link {
-            color: #f44336;
-            text-decoration: none;
-            font-size: 0.85rem;
-        }
-
-        .forgot-link:hover {
-            color: #ff7961;
-        }
-    </style>
-
-    <div class="login-card">
-          <div class="logo">
-        <<img src="vendor/adminlte/dist/img/isolutions.png" alt="Logo" />
-    </div>
-                <div class="login-title">Register</div>
-
+    <div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class=" w-full bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-center flex text-2xl font-bold text-gray-900 mb-6">Register</h2>
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
-            <!-- Name -->
-            <div class="form-group">
-                <x-input-label for="name" :value="__('Name')" />
-                <x-text-input id="name" class="block mt-1 w-full"
-                              type="text" name="name"
-                              :value="old('name')"
-                              required autofocus autocomplete="name"
-                              placeholder="Nama lengkap" />
-                <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <div class="flex flex-wrap">
+                <!-- Name -->
+                <div class="mb-4 w-1/2 p-2">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Username</label>
+                    <input id="name" name="name" type="text" required autofocus
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        value="{{ old('name') }}">
+                    @error('name')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Email -->
+                <div class="mb-4 w-1/2 p-2">
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input id="email" name="email" type="email" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        value="{{ old('email') }}">
+                    @error('email')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Password -->
+                <div class="mb-4 w-1/2 p-2">
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input id="password" name="password" type="password" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    @error('password')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-4 w-1/2 p-2">
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
+                    <input id="password_confirmation" name="password_confirmation" type="password" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <!-- Nama Anggota -->
+                <div class="mb-4 w-1/2 p-2">
+                    <label for="nama_anggota" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                    <input id="nama_anggota" name="nama_anggota" type="text" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        value="{{ old('nama_anggota') }}">
+                    @error('nama_anggota')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Domisili -->
+                <div class="mb-6 w-1/2 p-2">
+                    <label for="domisili" class="block text-sm font-medium text-gray-700">Domisili</label>
+                    <select type="select" id="domisili-select" name="domisili"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option name="" id=""></option>
+                        @foreach ($domisili as $id => $item)
+                            <option name="{{ $item }}" id="" value="{{ $item }}">{{ $item }}</option>
+                        @endforeach
+
+                    </select>                    
+                </div>
+
+                
+                <div class="kotener_peminatan_bioskop flex gap-4">                    
+                    <div>
+                        <h2 class="text-xl">Peminatan</h2>
+                        <div class="flex flex-row">                                        
+                            <div class="pe-4 pt-4 pb-4">
+                                <label for="nonton">Nonton</label>
+                                <input type="checkbox" id="nonton" name="nonton">
+                            </div>
+                            <div class="pe-4 pt-4 pb-4">
+                                <label for="nonton">Seminar</label>
+                                <input type="checkbox" name="seminar">
+                            </div>
+                            <div class="pe-4 pt-4 pb-4">
+                                <label for="nonton">Seminar berbayar</label>
+                                <input type="checkbox" name="seminar_berbayar">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="bioskop-container">
+                        <h2 class="text-xl">Bioskop</h2>
+                        <select id="bioskop" name="bioskop[]" multiple class="pt-4">
+                        
+                        </select>
+                    </div>
+                </div>
+                
             </div>
 
-            <!-- Email Address -->
-            <div class="form-group">
-                <x-input-label for="email" :value="__('Email')" />
-                <x-text-input id="email" class="block mt-1 w-full"
-                              type="email" name="email"
-                              :value="old('email')"
-                              required autocomplete="username"
-                              placeholder="email@example.com" />
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
-            </div>
-
-            <!-- Password -->
-            <div class="form-group">
-                <x-input-label for="password" :value="__('Password')" />
-                <x-text-input id="password" class="block mt-1 w-full"
-                              type="password" name="password"
-                              required autocomplete="new-password"
-                              placeholder="********" />
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="form-group">
-                <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-                <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                              type="password" name="password_confirmation"
-                              required autocomplete="new-password"
-                              placeholder="********" />
-                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-            </div>
-
-            <div class="flex items-center justify-between mt-4">
-                <a class="forgot-link" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
-                </a>
-
-                <x-primary-button class="login-button">
-                    {{ __('Register') }}
-                </x-primary-button>
+            <div>
+                <button type="submit"
+                    class="flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    Register
+                </button>
             </div>
         </form>
     </div>
+</div>
+@push('script')
+
+{{-- TAMBAHIN FITUR TOM SELECT BIAR SEARCHABLE DROPDOWN NYA  --}}
+<script>
+
+    new TomSelect("#domisili-select", {
+        create: false,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        }
+    });
+
+    new TomSelect("#bioskop", {
+        maxItems: 3,
+        create: false,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        },
+        placeholder: 'max 3'
+    });
+
+    // DOM change logic
+    $('#bioskop-container').hide();
+    $(document).ready(function () {
+        $('#nonton').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('#bioskop-container').show();
+                console.log('di ceklis cuk');
+                
+                
+            } else {
+                $('#bioskop-container').hide();
+            }
+        });
+    });
+
+    $('#domisili-select').on('change', function() {
+        let wilayah = $(this).val();
+        let bioskopSelect = $('#bioskop')[0].tomselect;
+
+        bioskopSelect.clearOptions();
+        bioskopSelect.addOption({ value: '', text: 'Loading...' });
+        bioskopSelect.refreshOptions();
+
+        $.get(`/api/bioskop/search/${wilayah}`, function(data) {
+            bioskopSelect.clearOptions();
+
+            if (data.length === 0) {
+                bioskopSelect.addOption({ value: '', text: 'Tidak ada bioskop' });
+            } else {
+                data.forEach(function(item) {
+                    bioskopSelect.addOption({ value: item.id, text: item.bioskop });
+                });
+            }
+
+            bioskopSelect.refreshOptions();
+        });
+    });
+
+
+
+</script>
+
+@endpush
 </x-guest-layout>
