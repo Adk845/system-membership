@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Kota;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +20,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $domisili = Kota::pluck('nama_kota', 'id');        
+        return view('auth.register', compact('domisili'));
     }
 
     /**
@@ -27,8 +29,10 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    // public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
+        // return 'berhasil';
         // Validasi input
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -44,10 +48,30 @@ class RegisteredUserController extends Controller
             'role' => 'member',
         ]);
 
-        $user->anggota()->create([
+        $anggota = $user->anggota()->create([
             'nama' => $request->nama_anggota,
             'domisili' => $request->domisili,           
         ]);
+
+        // $anggota->peminatan()->attach([1,2,3]);
+        // 1 = nonton, 2 = seminar berbayar, 3 seminar gratis
+        if(isset($request->nonton)){
+            $anggota->peminatan()->attach(1);
+            if(isset($request->bioskop)){
+                foreach($request->bioskop as $bioskop){
+                    $anggota->bioskop()->attach($bioskop);
+                }
+            }
+        }
+        if(isset($request->seminar)){
+            $anggota->peminatan()->attach(3);
+        }
+        if(isset($request->seminar_berbayar)){
+            $anggota->peminatan()->attach(2);
+        }
+
+
+
         
 
         // Menyebarkan event registered

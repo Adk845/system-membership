@@ -1,12 +1,37 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Kota;
 use App\Models\Bioskop;
 use Illuminate\Http\Request;
 
 class BioskopController extends Controller
 {
+    // public function search(Request $request){
+    //     $namaKota = $request->kota; // atau pakai $request->wilayah
+    //     $wilayah = Kota::where('nama_kota', $namaKota)->first();
+    //     $bioskop = $wilayah->load('bioskop');
+    //     return $bioskop;
+    //     if (!$wilayah) {
+    //         return response()->json([]);
+    //     }
+
+    //     $bioskop = Bioskop::where('wilayah_bioskop_id', $wilayah->id)->get();
+    //     return response()->json($bioskop);
+    // }
+
+     public function search($kota)
+        {
+            $wilayah = Kota::with('bioskop')->where('nama_kota', $kota)->first();
+
+            if (!$wilayah) {
+                return response()->json([]);
+            }
+
+            return response()->json($wilayah->bioskop);
+        }
+
+    
     /**
      * Display a listing of the resource.
      */

@@ -4,8 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Peminatan;
 
 class Anggota extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+
+    public function User(){
+        return $this->belongsTo(User::class);
+    }
+    public function peminatan(){
+        return $this->belongsToMany(Peminatan::class);
+        //yang dibawah mendefinisikan pivot table secara explisit
+        // return $this->belongsToMany(Peminatan::class, 'anggota_peminatan');
+
+    }
+
+    public function kota(){
+        return $this->belongsToMany(Kota::class);
+    }
+    public function bioskop(){
+        return $this->belongsToMany(Bioskop::class);
+    }
 }

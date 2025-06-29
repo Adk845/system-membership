@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('request_koordinator', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('anggota_id')->constrained('anggota')->onDelete('cascade');
+            $table->foreignId('anggota_id')->constrained('anggotas')->onDelete('cascade');
             $table->string('nama_anggota');
             $table->string('domisili');
             $table->timestamps();
