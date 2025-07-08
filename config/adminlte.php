@@ -325,7 +325,7 @@ return [
 
          [
             'header' => 'Member',
-            'can' => 'member-only'
+            'can' => ''
         ],
         [
             'text'    => 'Account Settings',
@@ -336,14 +336,14 @@ return [
                     'text' => 'Profile',
                     'url'  => '/settings',
                     'icon' => 'fas fa-fw fa-user',
-                    'can' => 'member-only'
+                    'can' => ''
                     
                 ],
                 [
                     'text' => 'Change Password',
                     'url'  => '/settings/password',
                     'icon' => 'fas fa-fw fa-lock',
-                    'can' => 'member-only'
+                    'can' => ''
                 ],
 
             ],
@@ -352,8 +352,14 @@ return [
             'text' => 'Event',
             'url' => '/events',
             'icon' => 'far fa-fw fa-file',
-            'can' => 'member-only'
+            'can' => ''
         ],
+        [
+            'text' => 'Member List',
+            'url' => '/member_list',
+            'icon' => 'far fa-fw fa-file',
+            'can' => ''
+        ]
 
 
 
@@ -449,7 +455,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

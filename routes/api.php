@@ -5,6 +5,7 @@ use App\Models\DokumenKoordinator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BioskopController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +24,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('dokumen_koordinator', DokumenKoordinatorController::class);
 Route::get('/bioskop/search/{kota}', [BioskopController::class, 'search']);
-Route::get('/bioskop/test', [BioskopController::class, 'test']);
+Route::get('/bioskop/test', [DashboardController::class, 'memberlist']);
