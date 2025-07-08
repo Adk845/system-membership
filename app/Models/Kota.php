@@ -14,4 +14,7 @@ class Kota extends Model
     public function bioskop() {
         return $this->hasMany(Bioskop::class);
     }
+    public function anggota() {
+        return $this->belongsToMany(Anggota::class);
+    }
 }
