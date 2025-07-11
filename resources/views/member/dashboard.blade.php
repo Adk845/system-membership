@@ -176,141 +176,150 @@
         color: var(--primary);
     }
 </style>
-
+{{-- @dd($data) --}}
 <div class="dashboard-container">
     <div class="row">
         {{-- Kiri: Kartu Member --}}
         <div class="col-md-5 col-left">
             <div class="member-card" style="background-image: url('{{ asset('images/depan.png   ') }}');">
                 <div class="overlay">
-                   <div style="position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%);
-    margin: 0;
-    width: 100%;
-    text-align: center;
-    pointer-events: none;">
-    
-   <h4 style="margin-bottom: 5px; font-size: 30px; color: #e7c47b; font-family: 'Poppins', sans-serif; font-weight: normal;">MEMBER CARD</h4>
-
-    
-    {{-- Nomor unik kartu --}}
-    <p style="font-size: 16px; color: #fff; font-weight: 400; margin: 0; color: #e7c47b;">
-       {{ str_pad($user->id, 6, '0', STR_PAD_LEFT) }}
-    </p>
-
-    
-
-</div>
-
-  {{-- Kiri Bawah: Member Since --}}
+                    <div style="position: absolute; 
+                                top: 50%; 
+                                left: 50%; 
+                                transform: translate(-50%, -50%);
+                                margin: 0;
+                                width: 100%;
+                                text-align: center;
+                                pointer-events: none;">
+                        
+                        <h4 style="margin-bottom: 5px; font-size: 30px; color: #e7c47b; font-family: 'Poppins', sans-serif; font-weight: normal;">MEMBER CARD</h4>                        
+                        {{-- Nomor unik kartu --}}
+                        <p style="font-size: 16px; color: #fff; font-weight: 400; margin: 0; color: #e7c47b;">
+                        {{-- {{ str_pad($user->id, 6, '0', STR_PAD_LEFT) }} --}}
+                        </p>                
+                    </div>
+                    {{-- Kiri Bawah: Member Since --}}
                     <p style="font-family: 'Great Vibes', cursive; position: absolute; bottom: 30px; left: 15px; font-size: 16px; color: #e7c47b; font-weight: 400; margin: 0;">
-                        Member Since: {{ $user->created_at->format('Y') }}
-                    </p>
-                  
+                        Member Since: 
+                        {{ $user->created_at->format('Y') }}
+                    </p>                    
                 </div>
             </div>
             <div class="member-card" style="background-image: url('{{ asset('images/depan.png') }}');">
                 <div class="overlay">
-
-                <ul style="font-size: 10px; line-height: 1.5; margin-bottom: 20px; margin-top: 50px;">
-                   <strong>Disclaimer Kartu Keanggotaan:</strong> 
-           
-                    <li>Kartu <strong>ini eksklusif dari komunitas nonton bareng ISolutions Indonesia</strong>.</li>
-                    <li><strong>ISolutions Indonesia tidak bertanggung jawab</strong> atas kerugian atau kerusakan yang timbul akibat kehilangan atau penggunaan kartu yang tidak sah.</li>
-                    <li>Kartu ini merupakan tanggung jawab pemilik, <strong>ISolutions Indonesia tidak bertanggung jawab atas penyalahgunaan</strong>.</li>
-                    <li>Segala bentuk <strong>penyalahgunaan akan dikenakan sanksi</strong>, termasuk pembatalan akses tanpa kompensasi.</li>
-                    <li><strong>Pelanggaran terhadap ketentuan ini</strong> dapat mengakibatkan pembatalan keikutsertaan secara mutlak.</li>
-                    <li><strong>ISolutions berhak menolak akses</strong> apabila ditemukan penyalahgunaan.</li>
-                    <li>Jika kartu ini ditemukan, mohon <strong>kembalikan ke ISolutions Indonesia</strong>.</li>
-                </ul>
-
+                    <ul style="font-size: 10px; line-height: 1.5; margin-bottom: 20px; margin-top: 50px;">
+                    <strong>Disclaimer Kartu Keanggotaan:</strong> 
+            
+                        <li>Kartu <strong>ini eksklusif dari komunitas nonton bareng ISolutions Indonesia</strong>.</li>
+                        <li><strong>ISolutions Indonesia tidak bertanggung jawab</strong> atas kerugian atau kerusakan yang timbul akibat kehilangan atau penggunaan kartu yang tidak sah.</li>
+                        <li>Kartu ini merupakan tanggung jawab pemilik, <strong>ISolutions Indonesia tidak bertanggung jawab atas penyalahgunaan</strong>.</li>
+                        <li>Segala bentuk <strong>penyalahgunaan akan dikenakan sanksi</strong>, termasuk pembatalan akses tanpa kompensasi.</li>
+                        <li><strong>Pelanggaran terhadap ketentuan ini</strong> dapat mengakibatkan pembatalan keikutsertaan secara mutlak.</li>
+                        <li><strong>ISolutions berhak menolak akses</strong> apabila ditemukan penyalahgunaan.</li>
+                        <li>Jika kartu ini ditemukan, mohon <strong>kembalikan ke ISolutions Indonesia</strong>.</li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-       
+    
 
 
 
 
 
         {{-- Kanan: Info Profil, Metrics, Ranking --}}
-       <div class="col-md-7 col-right">
-    <div class="info-card">
-        <h5>Profil Proyek</h5>
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#tab-profil">Tentang Komunitas</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#tab-film">Film yang Sudah Ditonton</a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div id="tab-profil" class="tab-pane fade show active">
-                <p> <strong>Nobar Isolutions</strong> Komunitas penikmat dan pelaku perfilman Indonesia. Komunitas Pendukung Sinema Indonesia yang Baik, Positive, Edukatif, Inspiratif, Penuh Hikmah, Bermanfaat Serta Menghibur bagi Masyarakat Penonton Sinema di Seluruh Indonesia dan Dunia.</p>
-            </div>
-            <div id="tab-film" class="tab-pane fade">
-                <ul class="pl-3 mb-0">
-                    <li>Whiplash (2014)</li>
-                    <li>Everything Everywhere All At Once (2022)</li>
-                    <li>Sebelum Pagi Terulang Kembali (2020)</li>
-                    <li>Janin (2023)</li>
+        <div class="col-md-7 col-right">
+            <div class="info-card">
+                <h5>Profil Proyek</h5>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#tab-profil">Tentang Komunitas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab-film">Film yang Sudah Ditonton</a>
+                    </li>
                 </ul>
+                <div class="tab-content">
+                    <div id="tab-profil" class="tab-pane fade show active">
+                        <p> <strong>Nobar Isolutions</strong> Komunitas penikmat dan pelaku perfilman Indonesia. Komunitas Pendukung Sinema Indonesia yang Baik, Positive, Edukatif, Inspiratif, Penuh Hikmah, Bermanfaat Serta Menghibur bagi Masyarakat Penonton Sinema di Seluruh Indonesia dan Dunia.</p>
+                    </div>
+                    <div id="tab-film" class="tab-pane fade">
+                        <ul class="pl-3 mb-0">
+                            <li>Whiplash (2014)</li>
+                            <li>Everything Everywhere All At Once (2022)</li>
+                            <li>Sebelum Pagi Terulang Kembali (2020)</li>
+                            <li>Janin (2023)</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
 
 
-<div class="info-card">
-    <h5><i class="fas fa-theater-masks mr-2"></i>Genre Favorit</h5>
-    <ul class="pl-3 mb-0">
-        <li>Drama</li>
-        <li>Dokumenter</li>
-        <li>Thriller Psikologis</li>
-    </ul>
-</div>
+            <div class="info-card">
+                
+                <div class="d-flex">
+                    {{-- <div class="kontener_info ">
+                        <h5><i class="fas fa-theater-masks mr-2"></i>Genre Favorit</h5>
+                        <ul class="pl-3 mb-0">
+                            <li>Drama</li>
+                            <li>Dokumenter</li>
+                            <li>Thriller Psikologis</li>
+                        </ul>
+                    </div> --}}
+                    <div>
+                        <h5>Status</h5>
+                        <p>{{ $anggota->level }}</p>
+                    </div>
+                    <div class="kontener_info ml-5" >
+                        <h5>Lokasi Domisili</h5>
+                        <p>{{ $kota }}</p>
+                    </div>
+                    <div class="ml-5">
+                        <h5>Anggota di daerah {{ $kota }}</h5>
+                        <p>Jumlah Anggota : {{ $member->count() }}</p>
+                    </div>
+                </div>
+            </div>
 
 
 
             <div class="metrics">
                 <div class="metric-card">
                     <i class="fas fa-trophy"></i>
-                    <div class="value">{{ $rank ?? '12' }}</div>
+                    <div class="value">{{'12' }}</div>
                     <div class="label">Peringkat</div>
                 </div>
                 <div class="metric-card">
                     <i class="fas fa-chart-line"></i>
-                    <div class="value">{{ $points ?? '89' }}</div>
+                    <div class="value">{{'89' }}</div>
                     <div class="label">Poin</div>
                 </div>
                 <div class="metric-card">
                     <i class="fas fa-coins"></i>
-                    <div class="value">{{ $coins ?? '42' }}</div>
+                    <div class="value">{{ '42' }}</div>
                     <div class="label">Koin</div>
                 </div>
             </div>
 
-            <!-- <div class="ranking-section mt-4">
-                <h5>3 Anggota Aktif Bulan Ini</h5>
-                <div class="ranking-cards">
-                    <div class="ranking-card">
-                        <h6>1st Place</h6>
-                        <div class="place">Andi Pratama (Sutradara)</div>
+                <!-- <div class="ranking-section mt-4">
+                    <h5>3 Anggota Aktif Bulan Ini</h5>
+                    <div class="ranking-cards">
+                        <div class="ranking-card">
+                            <h6>1st Place</h6>
+                            <div class="place">Andi Pratama (Sutradara)</div>
+                        </div>
+                        <div class="ranking-card">
+                            <h6>2nd Place</h6>
+                            <div class="place">Rina Dewi (Editor)</div>
+                        </div>
+                        <div class="ranking-card">
+                            <h6>3rd Place</h6>
+                            <div class="place">Dimas Oktavian (Penulis Naskah)</div>
+                        </div>
                     </div>
-                    <div class="ranking-card">
-                        <h6>2nd Place</h6>
-                        <div class="place">Rina Dewi (Editor)</div>
-                    </div>
-                    <div class="ranking-card">
-                        <h6>3rd Place</h6>
-                        <div class="place">Dimas Oktavian (Penulis Naskah)</div>
-                    </div>
-                </div>
-            </div> -->
+                </div> -->
         </div>
     </div>
 </div>

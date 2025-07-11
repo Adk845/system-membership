@@ -9,12 +9,14 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard'); // Admin Dashboard
-    }
-    public function memberlist(){
         $kota = Auth::user()->anggota->kota->first()->nama_kota;
         $member = Anggota::with('user')->where('domisili', $kota)->where('level', 'member')->get();   
-        return view('koordinator.memberlist', compact('member'));
+        $user = auth()->user();
+        $anggota = Anggota::where('user_id', $user->id)->first();
+        $data = [$anggota, $kota, $member, $user];
+        // return $anggota;
+        return view('member.dashboard', compact(['member', 'user', 'data', 'kota', 'anggota']));
+        // return view('admin.dashboard'); // Admin Dashboard
     }
     
 

@@ -27,33 +27,17 @@
                         <td>{{ $item->level }}</td>                        
                         <td>
                           <div class="dropdown">
-  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-    Dropdown link
-  </a>
+                              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                                Option
+                              </a>
 
-  <div class="dropdown-menu">
-    <a class="dropdown-item" href="{{ route('') }}">Delete</a>
-    {{-- <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a> --}}
-  </div>
-</div>
-                            {{-- <div class="dropdown">
-                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Action
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item" href="#">Edit</a>
-                                    </li>
-                                    <li>
-                                        <form action="#" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="dropdown-item text-danger" type="submit">Delete</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div> --}}
+                              <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ route('member.delete', $item->user->id) }}">Delete</a>
+                                <a class="dropdown-item" href="{{ route('member.edit', $item->user->id) }}">Edit</a>
+                                {{-- <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a> --}}
+                              </div>
+                            </div>              
                         </td>                        
                     </tr>    
                 @endforeach                               
@@ -63,9 +47,7 @@
 </div>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  Launch demo modal
-</button>
+<a class="btn btn-primary" href="{{ route('member.create') }}">Crete new Member</a>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -454,6 +454,21 @@ return [
     */
 
     'plugins' => [
+        'Tom Select' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => 'https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet',
+                ],
+            ],
+        ],
         'Datatables' => [
             'active' => true,
             'files' => [
