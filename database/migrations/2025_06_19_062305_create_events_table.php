@@ -14,11 +14,16 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('anggota_id')->constrained('anggotas')->onDelete('cascade');
-            $table->string('nama');
-            $table->text('deskripsi');
-            $table->string('jenis_peminatan');
-            $table->string('Lokasi');
-            $table->string('wilayah_koordinator');
+            $table->string('createdBy')->nullable();
+            $table->string('nama')->nullable();
+            $table->text('deskripsi')->nullable();
+            $table->text('narasumber')->nullable();
+            $table->string('jenis_peminatan')->nullable();
+            $table->string('Lokasi')->nullable();
+            $table->string('link')->nullable();
+            $table->date('tanggal')->nullable();
+            $table->time('waktu')->nullable();
+            $table->string('wilayah_koordinator')->nullable();
             $table->string('gambar');
             $table->timestamps();
         });

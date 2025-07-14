@@ -18,15 +18,39 @@ class UserAnggota extends Seeder
      */
     public function run(): void
     {
+        //SUPER ADMIN
+        $super_admin = User::create([
+            'name' => 'Super Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('123123123'),
+            'role' => 'admin'
+        ]);
+        $admin_anggota = $super_admin->anggota()->create([
+            'nama' => 'Super Admin',
+            'tanggal_lahir' => '2000-01-15',
+            'domisili' => 'Jakarta Selatan',
+            'email' => 'admin@gmail.com',
+            'nomor' => '08577384728',
+            'genre' => 'horor,action,comedy',
+            'level' => 'koordinator',
+            'akses_level' => 'koordinator',
+        ]);
+
+        //koordinator dummy 
+
         $admin = User::create([
             'name' => 'Admin Jakarta Selatan',
             'email' => 'admin_jaksel@gmail.com',
             'password' => Hash::make('123123123'),
-            'role' => 'admin'
+            'role' => 'koordinator'
         ]);
         $admin_anggota = $admin->anggota()->create([
             'nama' => 'admin Jakarta selatan',
+            'tanggal_lahir' => '2000-01-15',
             'domisili' => 'Jakarta Selatan',
+            'email' => 'admin_jaksel@gmail.com',
+            'nomor' => '08577384728',
+            'genre' => 'horor,action,comedy,thriler',
             'level' => 'koordinator',
             'akses_level' => 'koordinator',
         ]);
@@ -53,6 +77,10 @@ class UserAnggota extends Seeder
                 // Membuat anggota yang berelasi dengan user
                $anggota = $user->anggota()->create([
                     'nama' => 'Anggota ' . $kota . ' ' . $i,
+                    'tanggal_lahir' => '2000-01-15',
+                    'email' => strtolower(str_replace(' ', '', $kota)) . $i . '@example.com',
+                    'nomor' => '085773897546',
+                    'genre' => 'action, horor',
                     'domisili' => $kota,
                 ]);
                 $anggota->peminatan()->attach([1,2,3]);

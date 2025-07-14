@@ -32,6 +32,7 @@ class RegisteredUserController extends Controller
     // public function store(Request $request): RedirectResponse
     public function store(Request $request)
     {
+        // return $request;
         // return 'berhasil';
         // Validasi input
         $request->validate([
@@ -50,7 +51,11 @@ class RegisteredUserController extends Controller
 
         $anggota = $user->anggota()->create([
             'nama' => $request->nama_anggota,
-            'domisili' => $request->domisili,           
+            'email' => $request->email,
+            'nomor' => $request->nomor,
+            'domisili' => $request->domisili,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'genre' => $request->genre,
         ]);
 
         // $anggota->peminatan()->attach([1,2,3]);
@@ -79,13 +84,13 @@ class RegisteredUserController extends Controller
 
         // Melakukan login otomatis
         Auth::login($user);
-
+        redirect()->route('dashboard');
         // Cek role pengguna setelah login dan arahkan ke dashboard yang sesuai
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');  // Pengguna admin
-        } elseif ($user->role === 'member') {
-            return redirect()->route('member.dashboard');  // Pengguna member
-        }
+        // if ($user->role === 'admin') {
+        //     return redirect()->route('admin.dashboard');  // Pengguna admin
+        // } elseif ($user->role === 'member') {
+        //     return redirect()->route('member.dashboard');  // Pengguna member
+        // }
 
         // Default redirect jika role tidak ditemukan
         return redirect(RouteServiceProvider::HOME); 

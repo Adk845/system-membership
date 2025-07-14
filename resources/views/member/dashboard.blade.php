@@ -229,57 +229,40 @@
 
 
         {{-- Kanan: Info Profil, Metrics, Ranking --}}
-        <div class="col-md-7 col-right">
-            <div class="info-card">
-                <h5>Profil Proyek</h5>
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#tab-profil">Tentang Komunitas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#tab-film">Film yang Sudah Ditonton</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div id="tab-profil" class="tab-pane fade show active">
-                        <p> <strong>Nobar Isolutions</strong> Komunitas penikmat dan pelaku perfilman Indonesia. Komunitas Pendukung Sinema Indonesia yang Baik, Positive, Edukatif, Inspiratif, Penuh Hikmah, Bermanfaat Serta Menghibur bagi Masyarakat Penonton Sinema di Seluruh Indonesia dan Dunia.</p>
-                    </div>
-                    <div id="tab-film" class="tab-pane fade">
-                        <ul class="pl-3 mb-0">
-                            <li>Whiplash (2014)</li>
-                            <li>Everything Everywhere All At Once (2022)</li>
-                            <li>Sebelum Pagi Terulang Kembali (2020)</li>
-                            <li>Janin (2023)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-
+        <div class="col-md-7 col-right">        
 
             <div class="info-card">
                 
                 <div class="d-flex">
-                    {{-- <div class="kontener_info ">
-                        <h5><i class="fas fa-theater-masks mr-2"></i>Genre Favorit</h5>
-                        <ul class="pl-3 mb-0">
-                            <li>Drama</li>
-                            <li>Dokumenter</li>
-                            <li>Thriller Psikologis</li>
-                        </ul>
-                    </div> --}}
-                    <div>
-                        <h5>Status</h5>
-                        <p>{{ $anggota->level }}</p>
+                     <div class="ml-5">
+                        <h3>{{ $anggota->level }}</h3>
+                        <p></p>
                     </div>
-                    <div class="kontener_info ml-5" >
-                        <h5>Lokasi Domisili</h5>
-                        <p>{{ $kota }}</p>
-                    </div>
-                    <div class="ml-5">
-                        <h5>Anggota di daerah {{ $kota }}</h5>
-                        <p>Jumlah Anggota : {{ $member->count() }}</p>
-                    </div>
+                </div>
+                <div class="d-flex">
+                    @if(Auth::user()->role == 'koordinator' || Auth::user()->role == 'member')
+                        {{-- <div class="kontener_info ">
+                            <h5><i class="fas fa-theater-masks mr-2"></i>Genre Favorit</h5>
+                            <ul class="pl-3 mb-0">
+                                @foreach($genre as $item)
+                                <li>{{ $item }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                     --}}
+                       
+                        <div class="kontener_info ml-5" >
+                            <h5>Lokasi Domisili</h5>
+                            <p>{{ $kota }}</p>
+                        </div>
+                        @if(Auth::user()->role == 'koordinator')
+                            <div class="ml-5">
+                                <h5>Anggota Daerah {{ $kota }}</h5>
+                                <p class="text-center" style="font-size: 30px; font-weight: bold">{{ $member->count() }}</p>
+                                <p class="text-center">Anggota</p>
+                            </div>
+                        @endif
+                    @endif
                 </div>
             </div>
 
