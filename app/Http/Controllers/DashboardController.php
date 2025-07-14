@@ -9,14 +9,31 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $kota = Auth::user()->anggota->kota->first()->nama_kota;
-        $member = Anggota::with('user')->where('domisili', $kota)->where('level', 'member')->get();   
-        $user = auth()->user();
-        $anggota = Anggota::where('user_id', $user->id)->first();
-        $data = [$anggota, $kota, $member, $user];
-        // return $anggota;
-        return view('member.dashboard', compact(['member', 'user', 'data', 'kota', 'anggota']));
-        // return view('admin.dashboard'); // Admin Dashboard
+        $akses = Auth::user()->role;
+        if($akses == 'admin'){
+            $member = Anggota::get();   
+            $user = auth()->user();
+            $anggota = Anggota::where('user_id', $user->id)->first();
+            $data = [$anggota, $member, $user];           
+            return view('member.dashboard', compact(['member', 'user', 'data', 'anggota', 'akses']));
+
+        } elseif($akses == 'koordinator') {
+            $kota = Auth::user()->anggota->kota->first()->nama_kota;
+            $member = Anggota::with('user')->where('domisili', $kota)->where('level', 'member')->get();   
+            $user = auth()->user();
+            $anggota = Anggota::where('user_id', $user->id)->first();
+            $genre = explode(',', $anggota->genre);            
+            $data = [$anggota, $kota, $member, $user];           
+            return view('member.dashboard', compact(['member', 'user', 'data', 'kota', 'anggota', 'akses', 'genre']));            
+
+        } else{
+            $kota = Auth::user()->anggota->domisili;            
+            $user = auth()->user();
+            $anggota = Anggota::where('user_id', $user->id)->first();
+            $data = [$anggota, $kota, $user];        
+            return view('member.dashboard', compact(['user', 'data', 'kota', 'anggota', 'akses', 'genre']));        
+        }
+        
     }
     
 

@@ -17,6 +17,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('nama');
+            $table->date('tanggal_lahir');
+            $table->string('email')->nullable();
+            $table->string('nomor')->nullable();
+            $table->string('genre')->nullable();
             $table->string('level')->default('member');
             $table->string('akses_level')->default('member');
             $table->string('domisili')->nullable();

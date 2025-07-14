@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
             PeminatanSeeder::class,            
             KotaSeeder::class,
             BioskopSeeder::class,
-            UserAnggota::class
+            UserAnggota::class,
+            EventSeeder::class,
         ]);
     }
 }

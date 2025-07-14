@@ -1,4 +1,22 @@
 <x-guest-layout>
+    <style>
+        .tag-capsule {
+            display: inline-flex;
+            align-items: center;
+            background: #e5e7eb;
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .tag-capsule button {
+            background: none;
+            border: none;
+            margin-left: 0.5rem;
+            cursor: pointer;
+        }
+    </style>
+
     <div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
     <div class=" w-full bg-white p-8 rounded-lg shadow-md">
         <h2 class="text-center flex text-2xl font-bold text-gray-900 mb-6">Register</h2>
@@ -25,6 +43,27 @@
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         value="{{ old('email') }}">
                     @error('email')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                {{-- Nomor Telepon  --}}
+                <div class="mb-4 w-1/2 p-2">
+                    <label for="nomor" class="block text-sm font-medium text-gray-700">nomor</label>
+                    <input id="nomor" name="nomor" type="text" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        value="{{ old('nomor') }}">
+                    @error('nomor')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Tanggal Lahir --}}
+                <div class="mb-4 w-1/2 p-2">
+                    <label for="tanggalLahir" class="block text-sm font-medium text-gray-700">tanggal Lahir</label>
+                    <input id="tanggal_lahir" name="tanggal_lahir" type="date" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        value="{{ old('tanggal_lahir') }}">
+                    @error('tanggalLahir')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -96,10 +135,26 @@
                         
                         </select>
                     </div>
+
+                  
                 </div>
                 
             </div>
 
+             <div class="ms-5" id="genre-container">
+                <label for="genre">Genre Favorit</label>
+                <select id="genre-select" class="mt-1 block  border-gray-300 rounded-md shadow-sm">
+                    <option value="" disabled selected>Pilih genre</option>
+                    <option value="action">Action</option>
+                    <option value="drama">Drama</option>
+                    <option value="comedy">Comedy</option>
+                    <option value="thriller">Thriller</option>
+                    <option value="horror">Horror</option>
+                </select>
+                <div id="genre-tags" class="flex flex-wrap gap-2 mt-2"></div>
+                <!-- Hidden input untuk submit array genre -->
+                <input type="hidden" name="genre" id="genre-hidden">
+            </div>
             <div>
                 <button type="submit"
                     class="flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -113,6 +168,41 @@
 
 {{-- TAMBAHIN FITUR TOM SELECT BIAR SEARCHABLE DROPDOWN NYA  --}}
 <script>
+
+
+$(document).ready(function () {
+    let selectedGenres = [];
+
+    $('#genre-select').on('change', function () {
+        let val = $(this).val();
+        let text = $(this).find('option:selected').text();
+
+        // Cegah duplikasi
+        if (val && !selectedGenres.includes(val)) {
+            selectedGenres.push(val);
+            $('#genre-tags').append(
+                `<span class="tag-capsule">${text}
+                    <button type="button" data-val="${val}">&times;</button>
+                </span>`
+            );
+            updateHiddenInput();
+        }
+        // Reset select ke default
+        $(this).val('');
+    });
+
+    // Hapus tag jika tombol x diklik
+    $('#genre-tags').on('click', 'button', function () {
+        let val = $(this).data('val');
+        selectedGenres = selectedGenres.filter(v => v != val);
+        $(this).parent().remove();
+        updateHiddenInput();
+    });
+
+    function updateHiddenInput() {
+        $('#genre-hidden').val(selectedGenres.join(','));
+    }
+});
 
     new TomSelect("#domisili-select", {
         create: false,
@@ -133,16 +223,19 @@
     });
 
     // DOM change logic
+    $('#genre-container').hide();
     $('#bioskop-container').hide();
     $(document).ready(function () {
         $('#nonton').on('change', function () {
             if ($(this).is(':checked')) {
                 $('#bioskop-container').show();
+                $('#genre-container').show();
                 console.log('di ceklis cuk');
                 
                 
             } else {
                 $('#bioskop-container').hide();
+                $('#genre-container').hide();
             }
         });
     });

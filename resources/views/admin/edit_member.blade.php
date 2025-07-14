@@ -18,7 +18,7 @@
                             <!-- Name -->
                             <div class="form-group col-md-6">
                                 <label for="name">Username</label>
-                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required autofocus>
+                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $anggota->nama) }}" required autofocus>
                                 @error('name')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -27,13 +27,13 @@
                             <!-- Email -->
                             <div class="form-group col-md-6">
                                 <label for="email">Email</label>
-                                <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
+                                <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $user->email) }}" required>
                                 @error('email')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
 
-                            <!-- Password -->
+                            {{-- <!-- Password -->
                             <div class="form-group col-md-6">
                                 <label for="password">Password</label>
                                 <input type="password" name="password" id="password" class="form-control" required>
@@ -46,12 +46,12 @@
                             <div class="form-group col-md-6">
                                 <label for="password_confirmation">Konfirmasi Password</label>
                                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
-                            </div>
+                            </div> --}}
 
                             <!-- Nama Anggota -->
                             <div class="form-group col-md-6">
                                 <label for="nama_anggota">Nama Lengkap</label>
-                                <input type="text" name="nama_anggota" id="nama_anggota" class="form-control" value="{{ old('nama_anggota') }}" required>
+                                <input type="text" name="nama_anggota" id="nama_anggota" class="form-control" value="{{ old('nama_anggota', $anggota->nama) }}" required>
                                 @error('nama_anggota')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror

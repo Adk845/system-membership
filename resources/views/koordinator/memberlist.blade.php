@@ -33,7 +33,14 @@
 
                               <div class="dropdown-menu">
                                 <a class="dropdown-item" href="{{ route('member.delete', $item->user->id) }}">Delete</a>
-                                <a class="dropdown-item" href="{{ route('member.edit', $item->user->id) }}">Edit</a>
+                                <div>
+                                  <form method="POST" action="{{ route('member.edit') }}">
+                                    @csrf
+                                    <input type="hidden" name="id_user" value="{{ $item->id }}">
+                                    <button class="dropdown-item">edit</button>
+                                  </form>
+                                </div>
+                                {{-- <a class="dropdown-item" href="{{ route('member.edit') }}">Edit</a> --}}
                                 {{-- <a class="dropdown-item" href="#">Another action</a>
                                 <a class="dropdown-item" href="#">Something else here</a> --}}
                               </div>

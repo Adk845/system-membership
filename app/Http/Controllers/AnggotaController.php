@@ -68,12 +68,15 @@ class AnggotaController extends Controller
 
     }
 
-    public function edit($id_user){
-        $user = User::where('id', $id_user)->first();
-        return $user;
-        $domisili = Kota::pluck('nama_kota', 'id');                
-        return $id_user;
-        return view('admin.edit_member', compact('domisili'));
+    public function edit(Request $request){
+        
+        $user = User::with('anggota')->where('id', $request->id_user)->first();
+        $anggota =  $user->anggota;
+        $peminatan = $anggota->peminatan;
+        $bioskop = $anggota->bioskop;
+        $domisili = Kota::pluck('nama_kota', 'id');   
+                           
+        return view('admin.edit_member', compact(['user', 'anggota', 'peminatan', 'bioskop', 'domisili']));
     }
 
     public function delete($id_user){

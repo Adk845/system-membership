@@ -259,7 +259,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'dashboard',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -334,7 +334,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'Profile',
-                    'url'  => '/settings',
+                    'url'  => '/setting',
                     'icon' => 'fas fa-fw fa-user',
                     'can' => ''
                     
@@ -352,14 +352,20 @@ return [
             'text' => 'Event',
             'url' => '/events',
             'icon' => 'far fa-fw fa-file',
-            'can' => ''
+            'can' => 'admin-koordinator'
         ],
         [
             'text' => 'Member List',
             'url' => '/member_list',
             'icon' => 'far fa-fw fa-file',
-            'can' => ''
-        ]
+            'can' => 'admin-koordinator'
+        ],
+        [
+            'text' => 'Koordinator List',
+            'url' => '/',
+            'icon' => 'far fa-fw fa-file',
+            'can' => 'admin-only'
+        ],
 
 
 

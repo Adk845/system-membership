@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Event;
 use App\Models\Peminatan;
 
 class Anggota extends Model
@@ -27,5 +28,11 @@ class Anggota extends Model
     }
     public function bioskop(){
         return $this->belongsToMany(Bioskop::class);
+    }
+    public function eventsCreated(){
+        return $this->hasMany(Event::class);
+    }
+    public function eventsJoined(){
+        return $this->belongsToMany(Event::class, 'anggota_events');
     }
 }

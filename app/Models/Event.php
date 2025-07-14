@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Anggota;
+
+class Event extends Model
+{
+    use HasFactory;
+    public function koordinator(){
+        return $this->belongsTo(Anggota::class);
+    }
+
+    public function peserta(){
+        return $this->belongsToMany(Anggota::class, 'anggota_events');
+    }
+}
