@@ -10,15 +10,16 @@ class DashboardController extends Controller
     public function index()
     {
         $akses = Auth::user()->role;
-        if($akses == 'admin'){
+        if($akses == 'admin'){   
+            $kota = Auth::user()->anggota->domisili;                     
             $member = Anggota::get();   
             $user = auth()->user();
             $anggota = Anggota::where('user_id', $user->id)->first();
             $data = [$anggota, $member, $user];           
-            return view('member.dashboard', compact(['member', 'user', 'data', 'anggota', 'akses']));
+            return view('member.dashboard', compact(['member', 'user', 'data', 'kota', 'anggota', 'akses',]));
 
         } elseif($akses == 'koordinator') {
-            $kota = Auth::user()->anggota->kota->first()->nama_kota;
+             $kota = Auth::user()->anggota->domisili;            
             $member = Anggota::with('user')->where('domisili', $kota)->where('level', 'member')->get();   
             $user = auth()->user();
             $anggota = Anggota::where('user_id', $user->id)->first();
@@ -30,6 +31,7 @@ class DashboardController extends Controller
             $kota = Auth::user()->anggota->domisili;            
             $user = auth()->user();
             $anggota = Anggota::where('user_id', $user->id)->first();
+            $genre = explode(',', $anggota->genre);            
             $data = [$anggota, $kota, $user];        
             return view('member.dashboard', compact(['user', 'data', 'kota', 'anggota', 'akses', 'genre']));        
         }

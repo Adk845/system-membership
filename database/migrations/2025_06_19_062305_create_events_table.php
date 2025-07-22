@@ -22,9 +22,10 @@ return new class extends Migration
             $table->string('Lokasi')->nullable();
             $table->string('link')->nullable();
             $table->date('tanggal')->nullable();
-            $table->time('waktu')->nullable();
+            // $table->time('waktu')->nullable();
+            $table->string('waktu')->nullable();
             $table->string('wilayah_koordinator')->nullable();
-            $table->string('gambar');
+            $table->string('gambar')->nullable();
             $table->timestamps();
         });
     }

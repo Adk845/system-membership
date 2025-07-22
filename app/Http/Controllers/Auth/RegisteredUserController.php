@@ -32,7 +32,9 @@ class RegisteredUserController extends Controller
     // public function store(Request $request): RedirectResponse
     public function store(Request $request)
     {
-        // return $request;
+        
+        $bioskops = explode(',', $request->bioskop);    
+        // return $request->bioskop;
         // return 'berhasil';
         // Validasi input
         $request->validate([
@@ -63,7 +65,7 @@ class RegisteredUserController extends Controller
         if(isset($request->nonton)){
             $anggota->peminatan()->attach(1);
             if(isset($request->bioskop)){
-                foreach($request->bioskop as $bioskop){
+                foreach($bioskops as $bioskop){
                     $anggota->bioskop()->attach($bioskop);
                 }
             }

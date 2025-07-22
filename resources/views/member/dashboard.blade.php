@@ -192,10 +192,12 @@
                                 text-align: center;
                                 pointer-events: none;">
                         
-                        <h4 style="margin-bottom: 5px; font-size: 30px; color: #e7c47b; font-family: 'Poppins', sans-serif; font-weight: normal;">MEMBER CARD</h4>                        
+                        {{-- <h4>{{ str_pad($anggota->id, 4, '0', STR_PAD_LEFT) }}</h4> --}}
+                        <h4 style="margin-bottom: 5px; font-size: 30px; color: #e7c47b; font-family: 'Poppins', sans-serif; font-weight: normal;">{{ $anggota->nama }}</h4>
+                        <h4>{{ ucfirst($anggota->level) }}</h4>
                         {{-- Nomor unik kartu --}}
                         <p style="font-size: 16px; color: #fff; font-weight: 400; margin: 0; color: #e7c47b;">
-                        {{-- {{ str_pad($user->id, 6, '0', STR_PAD_LEFT) }} --}}
+                        {{ str_pad($user->id, 6, '0', STR_PAD_LEFT) }}
                         </p>                
                     </div>
                     {{-- Kiri Bawah: Member Since --}}
@@ -210,7 +212,7 @@
                     <ul style="font-size: 10px; line-height: 1.5; margin-bottom: 20px; margin-top: 50px;">
                     <strong>Disclaimer Kartu Keanggotaan:</strong> 
             
-                        <li>Kartu <strong>ini eksklusif dari komunitas nonton bareng ISolutions Indonesia</strong>.</li>
+                        <li>Kartu <strong>ini eksklusif dari komunitas membership ISolutions Indonesia</strong>.</li>
                         <li><strong>ISolutions Indonesia tidak bertanggung jawab</strong> atas kerugian atau kerusakan yang timbul akibat kehilangan atau penggunaan kartu yang tidak sah.</li>
                         <li>Kartu ini merupakan tanggung jawab pemilik, <strong>ISolutions Indonesia tidak bertanggung jawab atas penyalahgunaan</strong>.</li>
                         <li>Segala bentuk <strong>penyalahgunaan akan dikenakan sanksi</strong>, termasuk pembatalan akses tanpa kompensasi.</li>
@@ -231,42 +233,36 @@
         {{-- Kanan: Info Profil, Metrics, Ranking --}}
         <div class="col-md-7 col-right">        
 
+            <div class="info-card"> 
+                <h5>Profil Usaha</h5>
+                <p>Isolutions Indonesia</p>              
+            </div>
             <div class="info-card">
                 
-                <div class="d-flex">
-                     <div class="ml-5">
-                        <h3>{{ $anggota->level }}</h3>
-                        <p></p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    @if(Auth::user()->role == 'koordinator' || Auth::user()->role == 'member')
-                        {{-- <div class="kontener_info ">
-                            <h5><i class="fas fa-theater-masks mr-2"></i>Genre Favorit</h5>
-                            <ul class="pl-3 mb-0">
-                                @foreach($genre as $item)
-                                <li>{{ $item }}</li>
-                                @endforeach
-                            </ul>
+                
+                <div class="d-flex">                                           
+                        <div class="ml-5 d-flex">
+                            <p><strong>Status Keanggotaan</strong></p>
+                            <p class="mr-2"><strong>:</strong></p>                            
+                                <p class="text-center">{{ ucfirst($user->role) }}</p>                            
                         </div>
-                     --}}
                        
-                        <div class="kontener_info ml-5" >
-                            <h5>Lokasi Domisili</h5>
+                        <div class="kontener_info ml-5 d-flex" >
+                            <p><strong>Domisili </strong></p>
+                            <p class="mr-2"><strong>:</strong></p>
                             <p>{{ $kota }}</p>
+                            {{-- <h5>{{ $kota }}</h5> --}}
                         </div>
                         @if(Auth::user()->role == 'koordinator')
                             <div class="ml-5">
-                                <h5>Anggota Daerah {{ $kota }}</h5>
-                                <p class="text-center" style="font-size: 30px; font-weight: bold">{{ $member->count() }}</p>
-                                <p class="text-center">Anggota</p>
+                                <h5>Anggota</h5>
+                                <p class="text-center" style="font-size: 20px; font-weight: bold">{{ $member->count() }}</p>
+                                {{-- <p class="text-center">Anggota</p> --}}
+                                {{-- <h5>{{ $member->count() }} Anggota</h5> --}}
                             </div>
-                        @endif
-                    @endif
+                        @endif                    
                 </div>
             </div>
-
-
 
             <div class="metrics">
                 <div class="metric-card">
@@ -286,23 +282,32 @@
                 </div>
             </div>
 
-                <!-- <div class="ranking-section mt-4">
-                    <h5>3 Anggota Aktif Bulan Ini</h5>
+                <div class="ranking-section mt-4">
+                    <h5>3 Peringkat Teratas Bulan Ini</h5>
                     <div class="ranking-cards">
                         <div class="ranking-card">
                             <h6>1st Place</h6>
-                            <div class="place">Andi Pratama (Sutradara)</div>
+                            <div>
+                                <img src="{{ asset('images') }}/no_profile.jpg" width="100px" alt="" style="border-radius: 50%">
+                            </div>
+                            <div class="place">Andi Pratama</div>
                         </div>
                         <div class="ranking-card">
                             <h6>2nd Place</h6>
-                            <div class="place">Rina Dewi (Editor)</div>
+                            <div>
+                                <img src="{{ asset('images') }}/no_profile.jpg" width="100px" alt="" style="border-radius: 50%">
+                            </div>
+                            <div class="place">Rina Dewi</div>
                         </div>
                         <div class="ranking-card">
                             <h6>3rd Place</h6>
-                            <div class="place">Dimas Oktavian (Penulis Naskah)</div>
+                            <div>
+                                <img src="{{ asset('images') }}/no_profile.jpg" width="100px" alt="" style="border-radius: 50%">
+                            </div>
+                            <div class="place">Dimas Oktavian</div>
                         </div>
                     </div>
-                </div> -->
+                </div>
         </div>
     </div>
 </div>

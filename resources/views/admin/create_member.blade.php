@@ -1,150 +1,192 @@
 @extends('adminlte::page')
 
-@section('title', 'Create New Member')
+@section('title', 'Create Member')
 
 @section('content')
+<div class="container">
+    <h2>Create Member</h2>
+    <form action="{{ route('member.create') }}" method="POST">
+        @csrf
+        @method('POST')
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Username</label>
+                <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label>No. Telepon</label>
+                <input type="text" name="nomor" class="form-control" value="{{ old('nomor') }}" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Tanggal Lahir</label>
+                <input type="date" name="tanggal_lahir" class="form-control" value="{{ old('tanggal_lahir') }}" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Nama Lengkap</label>
+                <input type="text" name="nama_anggota" class="form-control" value="{{ old('nama_anggota') }}" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Domisili</label>
+                <select name="domisili" id="domisili-select" class="form-control" required>
+                    <option disabled selected>Pilih Domisili</option>
+                    @foreach($domisili as $item)
+                        <option value="{{ $item }}" {{ old('domisili') == $item ? 'selected' : '' }}>{{ $item }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow">
-                <div class="card-header text-center font-weight-bold">Register</div>
+        <div class="form-group">
+            <label>Peminatan</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="nonton" id="nonton" {{ old('nonton') ? 'checked' : '' }}>
+                <label class="form-check-label">Nonton</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="seminar" {{ old('seminar') ? 'checked' : '' }}>
+                <label class="form-check-label">Seminar</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="seminar_berbayar" {{ old('seminar_berbayar') ? 'checked' : '' }}>
+                <label class="form-check-label">Seminar Berbayar</label>
+            </div>
+        </div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('member.create') }}">
-                        @csrf
+        <div class="container" id="genre_bioskop" >
+            <div class="row">
+                <div class="col-sm col-2" id="bioskop-container" style="display:none">
+                    <label for="bioskop">Bioskop</label>
+                    <select id="bioskop-select" class="form-control">
+                        <option value="" disabled selected>Pilih bioskop</option>
+                    </select>
+                    <div id="bioskop-tags" class="flex flex-wrap gap-2 mt-2"></div>
+                    <input type="hidden" name="bioskop" id="bioskop-hidden">
+                </div>
 
-                        <div class="form-row">
-                            <!-- Name -->
-                            <div class="form-group col-md-6">
-                                <label for="name">Username</label>
-                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required autofocus>
-                                @error('name')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-
-                            <!-- Email -->
-                            <div class="form-group col-md-6">
-                                <label for="email">Email</label>
-                                <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
-                                @error('email')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-
-                            <!-- Password -->
-                            <div class="form-group col-md-6">
-                                <label for="password">Password</label>
-                                <input type="password" name="password" id="password" class="form-control" required>
-                                @error('password')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-
-                            <!-- Confirm Password -->
-                            <div class="form-group col-md-6">
-                                <label for="password_confirmation">Konfirmasi Password</label>
-                                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
-                            </div>
-
-                            <!-- Nama Anggota -->
-                            <div class="form-group col-md-6">
-                                <label for="nama_anggota">Nama Lengkap</label>
-                                <input type="text" name="nama_anggota" id="nama_anggota" class="form-control" value="{{ old('nama_anggota') }}" required>
-                                @error('nama_anggota')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-
-                            <!-- Domisili -->
-                            <div class="form-group col-md-6">
-                                <label for="domisili-select">Domisili</label>
-                                <select name="domisili" id="domisili-select" class="form-control">
-                                    <option value="">Pilih Kota</option>
-                                    @foreach ($domisili as $id => $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="form-group">
-                            <h5>Peminatan</h5>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="nonton" name="nonton">
-                                <label class="form-check-label" for="nonton">Nonton</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" name="seminar">
-                                <label class="form-check-label">Seminar</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" name="seminar_berbayar">
-                                <label class="form-check-label">Seminar Berbayar</label>
-                            </div>
-                        </div>
-
-                        <div id="bioskop-container" class="form-group" style="display:none;">
-                            <label for="bioskop">Pilih Bioskop</label>
-                            <select id="bioskop" name="bioskop[]" class="form-control" multiple></select>
-                        </div>
-
-                        <div class="text-right">
-                            <button type="submit" class="btn btn-primary">
-                                Register
-                            </button>
-                        </div>
-
-                    </form>
+                <div class="ms-5 col-sm col-2" id="genre-container" style="display:none">
+                    <label for="genre">Genre Favorit</label>
+                    <select id="genre-select" class="form-control">
+                        <option value="" disabled selected>Pilih genre</option>
+                        <option value="Action">Action</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Comedy">Comedy</option>
+                        <option value="Thriller">Thriller</option>
+                        <option value="Horror">Horror</option>
+                    </select>
+                    <div id="genre-tags" class="flex flex-wrap gap-2 mt-2"></div>
+                    <input type="hidden" name="genre" id="genre-hidden">
                 </div>
             </div>
         </div>
-    </div>
+        <hr class="my-4">
+            <div class="row g-4 mb-3">
+                <div class="col-md-6">
+                    <label for="password" class="profile-form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" autocomplete="new-password" placeholder="">
+                </div>
+                <div class="col-md-6">
+                    <label for="password_confirmation" class="profile-form-label">Konfirmasi Password</label>
+                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" autocomplete="new-password" placeholder="Ulangi password">
+                </div>
+            </div>
+
+        <button type="submit" class="btn btn-primary mt-5">Simpan</button>
+    </form>
 </div>
+@endsection
 
 @push('js')
 <script>
-    new TomSelect("#domisili-select", {
-        create: false,
-        sortField: { field: "text", direction: "asc" }
+$(document).ready(function () {
+    let selectedGenres = [];
+    let selectedBioskop = [];
+
+    togglePeminatan();
+
+    $('#nonton').on('change', togglePeminatan);
+
+    function togglePeminatan() {
+        if ($('#nonton').is(':checked')) {
+            $('#bioskop-container').show();
+            $('#genre-container').show();
+        } else {
+            $('#bioskop-container').hide();
+            $('#genre-container').hide();
+        }
+    }
+
+    $('#genre-select').on('change', function () {
+        const val = $(this).val();
+        const text = $(this).find('option:selected').text();
+        if (val && !selectedGenres.includes(val)) {
+            selectedGenres.push(val);
+            $('#genre-tags').append(`
+                <span class="badge badge-pill badge-secondary d-inline-flex align-items-center">
+                    ${text}
+                    <button type="button" class="btn p-0 ml-2 text-white border-0 bg-transparent" data-val="${val}">&times;</button>
+                </span>
+            `);
+            updateGenreInput();
+        }
+        $(this).val('');
     });
 
-    new TomSelect("#bioskop", {
-        maxItems: 3,
-        create: false,
-        sortField: { field: "text", direction: "asc" },
-        placeholder: 'max 3'
+    $('#genre-tags').on('click', 'button', function () {
+        const val = $(this).data('val');
+        selectedGenres = selectedGenres.filter(v => v != val);
+        $(this).parent().remove();
+        updateGenreInput();
     });
 
-    $(document).ready(function () {
-        $('#nonton').on('change', function () {
-            $('#bioskop-container').toggle($(this).is(':checked'));
+    function updateGenreInput() {
+        $('#genre-hidden').val(selectedGenres.join(','));
+    }
+
+    $('#bioskop-select').on('change', function () {
+        const val = $(this).val();
+        const text = $(this).find('option:selected').text();
+        if (val && !selectedBioskop.includes(val) && selectedBioskop.length < 3) {
+            selectedBioskop.push(val);
+            $('#bioskop-tags').append(`
+                <span class="badge badge-pill badge-secondary d-inline-flex align-items-center">
+                    ${text}
+                    <button type="button" class="btn p-0 ml-2 text-white border-0 bg-transparent" data-val="${val}">&times;</button>
+                </span>
+            `);
+            updateBioskopInput();
+        }
+        $(this).val('');
+    });
+
+    $('#bioskop-tags').on('click', 'button', function () {
+        const val = $(this).data('val');
+        selectedBioskop = selectedBioskop.filter(v => v != val);
+        $(this).parent().remove();
+        updateBioskopInput();
+    });
+
+    function updateBioskopInput() {
+        $('#bioskop-hidden').val(selectedBioskop.join(','));
+    }
+
+    $('#domisili-select').on('change', function() {
+        const wilayah = $(this).val();
+        $.get(`/api/bioskop/search/${wilayah}`, function(data) {
+            $('#bioskop-select').empty();
+            if (data.length === 0) {
+                $('#bioskop-select').append(`<option>Tidak ada Bioskop</option>`);
+            } else {
+                $('#bioskop-select').append(`<option value="" disabled selected>Pilih bioskop</option>`);
+                data.forEach(function(item) {
+                    $('#bioskop-select').append(`<option value="${item.id}">${item.bioskop}</option>`);
+                });
+            }
         });
-
-        $('#domisili-select').on('change', function () {
-            let wilayah = $(this).val();
-            let bioskopSelect = $('#bioskop')[0].tomselect;
-            bioskopSelect.clearOptions();
-            bioskopSelect.addOption({ value: '', text: 'Loading...' });
-            bioskopSelect.refreshOptions();
-
-            $.get(`/api/bioskop/search/${wilayah}`, function(data) {
-                bioskopSelect.clearOptions();
-                if (data.length === 0) {
-                    bioskopSelect.addOption({ value: '', text: 'Tidak ada bioskop' });
-                } else {
-                    data.forEach(function(item) {
-                        bioskopSelect.addOption({ value: item.id, text: item.bioskop });
-                    });
-                }
-                bioskopSelect.refreshOptions();
-            });
-        });
     });
+});
 </script>
 @endpush
-
-@endsection
