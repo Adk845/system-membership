@@ -1,5 +1,7 @@
 <?php
 
+use function Laravel\Prompts\text;
+
 return [
 
     /*
@@ -63,9 +65,10 @@ return [
     |
     */
 
-//   'logo' => '<b style="color: #b71c1c;">MSI</b><span style="color: #b71c1c;"></span>',
-'logo' => '<img src="vendor/adminlte/dist/img/isolutions.png" alt="Logo" style="max-width: 150px; height: auto; border-radius: 0;">',
-
+    
+    // 'logo' => '<img src="vendor/adminlte/dist/img/isolutions.png" alt="Logo" style="max-width: 150px; height: auto; border-radius: 0;">',
+    // 'logo' => `<img src= "{{ asset('images/isolutions.png') }}" alt="Logo" style="max-width: 150px; height: auto;">`,    
+    'logo' => '<b style="color: #b71c1c;">Membership</b><span style="color: #b71c1c;"></span>',
     'logo_img' => 'vendor/adminlte/dist/img/isol.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -334,40 +337,60 @@ return [
             'submenu' => [
                 [
                     'text' => 'Profile',
-                    'url'  => '/setting',
+                    'url'  => '/profile',
                     'icon' => 'fas fa-fw fa-user',
                     'can' => ''
                     
                 ],
-                [
-                    'text' => 'Change Password',
-                    'url'  => '/settings/password',
-                    'icon' => 'fas fa-fw fa-lock',
-                    'can' => ''
-                ],
+                // [
+                //     'text' => 'Change Password',
+                //     'url'  => '/settings/password',
+                //     'icon' => 'fas fa-fw fa-lock',
+                //     'can' => ''
+                // ],
 
             ],
         ],
         [
-            'text' => 'Event',
-            'url' => '/events',
-            'icon' => 'far fa-fw fa-file',
-            'can' => 'admin-koordinator'
-        ],
-        [
-            'text' => 'Member List',
-            'url' => '/member_list',
-            'icon' => 'far fa-fw fa-file',
-            'can' => 'admin-koordinator'
-        ],
-        [
-            'text' => 'Koordinator List',
-            'url' => '/',
-            'icon' => 'far fa-fw fa-file',
-            'can' => 'admin-only'
-        ],
+            'text'    => 'Event',
+            'icon'    => 'fas fa-fw fa-calendar-day',
 
+            'submenu' => [
+                [
+                    'text' => 'Event List',
+                    'url' => '/events',
+                    'icon' => 'far fa-fw fa-calendar',
+                    'can' => ''                    
+                ],
+                [
+                    'text' => 'Create Event',
+                    'url' => '/events_admin',
+                    'icon' => 'far fa-fw fa-calendar',
+                    'can' => 'admin-koordinator'                    
+                ],
+                
+            ],
+        ],    
+        [
+            'text'    => 'Member',
+            'icon'    => 'fas fa-fw fa-users-cog',
 
+             'submenu' => [
+                [
+                    'text' => 'Member List',
+                    'url' => '/member_list',
+                    'icon' => 'far fa-fw fa-file',
+                    'can' => 'admin-koordinator'
+                ],
+                [
+                    'text' => 'Koordinator List',
+                    'url' => '/',
+                    'icon' => 'far fa-fw fa-file',
+                    'can' => 'admin-only'
+                ]
+             ]
+            
+        ],          
 
         // [
         //     'text' => 'multilevel',

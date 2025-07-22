@@ -15,91 +15,311 @@ use Illuminate\Http\Request;
 class AnggotaController extends Controller
 {
     //
+    ////////////////////////
+    //UNTUK NAMPILIN LIST
+    ////////////////////////    
+    // public function index(){
+        
+    //     if(Auth::user()->role == 'admin'){
+    //         $member = Anggota::paginate(10);
+    //         return view('admin.memberlist', compact(['member']));
+    //     } else {
+    //         $kota = Auth::user()->anggota->kota->first()->nama_kota;
+    //         // $member = Anggota::with('user')->where('domisili', $kota)->where('level', 'member')->get();   
+    //         $member = Anggota::all();
+    //         $user = auth()->user();
+    //     }     
+    //     // return $member;
+    //     return view('admin.memberlist', compact(['member', 'kota', 'user']));
+    // }
+    public function index(Request $request)
+        {
+            $query = Anggota::with('user');
 
-    public function index(){
-        $kota = Auth::user()->anggota->kota->first()->nama_kota;
-        $member = Anggota::with('user')->where('domisili', $kota)->where('level', 'member')->get();   
-        $user = auth()->user();
-        // return $member;
-        // return view('member.dashboard', compact(['member', 'user']));
-        return view('koordinator.memberlist', compact('member'));
+            // Search
+            if ($request->has('search') && $request->search != '') {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('domisili', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($q2) use ($search) {
+                        $q2->where('email', 'like', "%{$search}%");
+                    });
+                });
+            }
+
+            // Per page pagination
+            $perPage = $request->get('per_page', 10);
+            if ($perPage === 'all') {
+                $member = $query->orderBy('created_at', 'desc')->get(); // all data
+            } else {
+                $member = $query->orderBy('created_at', 'desc')->paginate((int)$perPage)->appends($request->all());
+            }
+
+            return view('admin.memberlist', compact('member'));
+        }
+
+    ////////////////////////
+    //UNTUK NAMPILIN FORM PROFILE
+    ////////////////////////
+    public function profile(){
+        $anggota = Auth::user()->anggota;
+        $peminatan = $anggota->peminatan->pluck('id')->toArray();        
+        $kotas = Kota::all();        
+        return view('member.profile', compact(['anggota', 'kotas', 'peminatan']));
     }
+
+    ///////////////////////////////
+    //UNTUK MENGIRIMKAN PERUBAHAN PROFILE
+    ///////////////////////////////
+    public function profile_update(Request $request){
+       try {            
+            $userid = Auth::user()->id;
+            $user = User::where('id', $userid)->first();            
+            $peminatan = [];
+            if($request->nonton){
+                array_push($peminatan, 1);
+            }
+            if($request->seminar){
+                array_push($peminatan, 2);
+            }
+            if($request->seminar_berbayar){
+                array_push($peminatan, 3);
+            }   
+        
+            
+            // Update nama user
+            $user->update([
+                'name' => $request->nama,
+            ]);    
+
+            // Update data anggota
+            $anggota = $user->anggota;        
+            $anggota->update([  
+                'nama' => $request->nama,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'email' => $request->email,
+                'nomor' => $request->nomor,
+                'genre' => $request->genre,
+                'domisili' => $request->domisili,        
+            ]);
+
+            //update peminatan 
+            if(empty($peminatan)){
+                $anggota->peminatan()->detach();
+            }
+            $anggota->peminatan()->sync($peminatan);
+
+            // ================================
+            // ⬇️ Tambahkan untuk update pivot ⬇️
+            // ================================
+            if(is_null($request->bioskop)){
+                $anggota->bioskop()->detach();
+            }
+            if ($request->filled('bioskop')) {
+                $bioskopIds = explode(',', $request->bioskop); // misal: ['26', '27', '28']
+                $anggota->bioskop()->sync($bioskopIds); // Ini akan update pivot table
+            }
+                if($request->password){
+                    return redirect()->route('member.profile')->with('success', 'Profil dan Password berhasil diperbarui!');
+                }else {
+                    return redirect()->route('member.profile')->with('success', 'Profil berhasil diperbarui!');
+                }
+                
+            } catch(\Exception) {             
+                return redirect()->route('member.profile')->with('error', 'Gagal memperbarui data');
+            }
+    }
+
+    ////////////////////////
+    //UNTUK NAMPILIN FORM CREATE MEMBER
+    ////////////////////////
     public function create(){
         $domisili = Kota::pluck('nama_kota', 'id');        
         return view('admin.create_member', compact('domisili'));
     }
+
+    ////////////////////////
+    //UNTUK BUAT MEMBER BARU CREATE MEMBER
+    ////////////////////////
     public function store(Request $request){
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        
+      
+        try{
+            $bioskops = explode(',', $request->bioskop);    
+            
+            $request->validate([
+                    'name' => 'required|string|max:255',
+                    'email' => 'required|string|email|max:255|unique:users,email',
+                    'password' => 'required|confirmed',
+                    'nama_anggota' => 'required|string|max:255',
+                    'domisili' => 'required|string',
+                    'nomor' => 'required|string|max:20',
+                    'tanggal_lahir' => 'required|date',
+                ]);
 
+                // Membuat pengguna baru
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'role' => 'member',
+                ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'member',
-        ]);
+                $anggota = $user->anggota()->create([
+                    'nama' => $request->nama_anggota,
+                    'email' => $request->email,
+                    'nomor' => $request->nomor,
+                    'domisili' => $request->domisili,
+                    'tanggal_lahir' => $request->tanggal_lahir,
+                    'genre' => $request->genre,
+                ]);
 
-        $anggota = $user->anggota()->create([
-            'nama' => $request->nama_anggota,
-            'domisili' => $request->domisili,           
-        ]);
-
-       
-        if(isset($request->nonton)){
-            $anggota->peminatan()->attach(1);
-            if(isset($request->bioskop)){
-                foreach($request->bioskop as $bioskop){
-                    $anggota->bioskop()->attach($bioskop);
+                // $anggota->peminatan()->attach([1,2,3]);
+                // 1 = nonton, 2 = seminar berbayar, 3 seminar gratis
+                if(isset($request->nonton)){
+                    $anggota->peminatan()->attach(1);
+                    if(isset($request->bioskop)){
+                        foreach($bioskops as $bioskop){
+                            $anggota->bioskop()->attach($bioskop);
+                        }
+                    }
                 }
-            }
-        }
-        if(isset($request->seminar)){
-            $anggota->peminatan()->attach(3);
-        }
-        if(isset($request->seminar_berbayar)){
-            $anggota->peminatan()->attach(2);
-        }
+                if(isset($request->seminar)){
+                    $anggota->peminatan()->attach(3);
+                }
+                if(isset($request->seminar_berbayar)){
+                    $anggota->peminatan()->attach(2);
+                }
 
-        return redirect()->route('memberlist');
+                return redirect()->route('memberlist')->with('success_create', 'menambahkan member baru');
+                    
+        } catch(\Exception) {
+                return redirect()->route('memberlist')->with('error_create', 'menambahkan member');
+        }
 
     }
 
-    public function edit(Request $request){
+    ////////////////////////
+    //UNTUK NAMPILIN FORM EDIT MEMBER
+    ////////////////////////
+    public function edit($id_user){
         
-        $user = User::with('anggota')->where('id', $request->id_user)->first();
+        $user = User::with('anggota')->where('id', $id_user)->first();
         $anggota =  $user->anggota;
-        $peminatan = $anggota->peminatan;
+        $peminatan = $anggota->peminatan->pluck('id')->toArray();
         $bioskop = $anggota->bioskop;
         $domisili = Kota::pluck('nama_kota', 'id');   
-                           
+                
         return view('admin.edit_member', compact(['user', 'anggota', 'peminatan', 'bioskop', 'domisili']));
     }
-
-    public function delete($id_user){
     
-    $user = User::where('id', $id_user)->first();
-    $anggota = $user->anggota;
-    if($anggota->level == 'koordinator'){
-        return 'koordinator';
-    }else{
-         if (!$user) {
-            return redirect()->back()->with('error', 'User tidak ditemukan');
-        }
+    ////////////////////////
+    //UNTUK SIMPAN PERUBAHAN EDIT MEMBER
+    ////////////////////////
+    public function update(Request $request){
         
-        if ($anggota) {
-            $anggota->peminatan()->detach();
-            $anggota->bioskop()->detach();
-            $anggota->delete();
-        }
+        try {
 
-        $user->delete();
+            $userid = $request->user_id;
+            $user = User::where('id', $userid)->first();
 
-        return redirect()->route('memberlist')->with('success', 'Member berhasil dihapus');
+            $peminatan = [];
+            if($request->nonton){
+                array_push($peminatan, 1);
+            }
+            if($request->seminar){
+                array_push($peminatan, 2);
+            }
+            if($request->seminar_berbayar){
+                array_push($peminatan, 3);
+            }   
+        
+            
+            // Update nama user
+            $user->update([
+                'name' => $request->name,
+            ]);    
+
+            // Update data anggota
+            $anggota = $user->anggota;        
+            $anggota->update([  
+                'nama' => $request->name,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'email' => $request->email,
+                'nomor' => $request->nomor,
+                'genre' => $request->genre,
+                'domisili' => $request->domisili,        
+            ]);
+
+            //update peminatan 
+            if(empty($peminatan)){
+                $anggota->peminatan()->detach();
+            }
+        $anggota->peminatan()->sync($peminatan);
+
+            // ================================
+            // ⬇️ Tambahkan untuk update pivot ⬇️
+            // ================================
+            if(is_null($request->bioskop)){
+                $anggota->bioskop()->detach();
+            }
+            if ($request->filled('bioskop')) {
+                $bioskopIds = explode(',', $request->bioskop); // misal: ['26', '27', '28']
+                $anggota->bioskop()->sync($bioskopIds); // Ini akan update pivot table
+            }
+
+            return redirect()->route('memberlist')->with('success', 'data member berhasil diperbarui!');
+        } catch(\Exception) {             
+            return redirect()->route('memberlist')->with('error', 'Terjadi kesalahan saat memperbarui data!');
         }
+}
+
+    ////////////////////////
+    //UNTUK MENGHAPUS DATA MEMBER
+    ////////////////////////
+    public function delete($id_user){        
+    
+        try{
+            $user = User::where('id', $id_user)->first();
+            $anggota = $user->anggota;            
+            // if(!empty($anggota->eventsCreated)){
+                
+            // }
+            if (!$user) {
+                    return redirect()->back()->with('error', 'User tidak ditemukan');
+                }
+                
+                if ($anggota) {
+                    $anggota->peminatan()->detach();
+                    $anggota->bioskop()->detach();
+                    $anggota->delete();
+                }
+
+                $user->delete();
+
+                return redirect()->route('memberlist')->with('success', ' menghapus data member');
+            } catch(\Exception){
+                return redirect()->route('memberlist')->with('error', 'Terjadi kesalahan saat menghapus');
+            }
+    }
+
+    ////////////////////////
+    //UNTUK MENDAPATKAN GENRE ANGGOTA TERTENTU BUAT KEBUTUHAN JAVASCRIPT
+    ////////////////////////
+    public function get_genre($id_anggota){
+        $genre = Anggota::where('id', $id_anggota)->first()->genre;
+        $array_genre = explode(',', $genre);        
+        return response()->json($array_genre);
+    }
+
+    ////////////////////////
+    //UNTUK MENDAPATKAN BIOSKOP ANGGOTA TERTENTU BUAT KEBUTUHAN JAVASCRIPT
+    ////////////////////////
+    public function get_bioskop($id_anggota){
+        $anggota = Anggota::where('id', $id_anggota)->first();
+        $bioskop = $anggota->bioskop;
+        return $bioskop;
     }
        
 }

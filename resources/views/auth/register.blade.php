@@ -101,7 +101,7 @@
                     <label for="domisili" class="block text-sm font-medium text-gray-700">Domisili</label>
                     <select type="select" id="domisili-select" name="domisili"
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                        <option name="" id=""></option>
+                        <option name="" id="" disabled selected>Pilih Domisili</option>
                         @foreach ($domisili as $id => $item)
                             <option name="{{ $item }}" id="" value="{{ $item }}">{{ $item }}</option>
                         @endforeach
@@ -131,17 +131,20 @@
                     
                     <div id="bioskop-container">
                         <h2 class="text-xl">Bioskop</h2>
-                        <select id="bioskop" name="bioskop[]" multiple class="pt-4">
-                        
+                        <select id="bioskop-select" name="bioskop" class="mt-1 block  border-gray-300 rounded-md shadow-sm" class="pt-4">
+                            <option value="" disabled selected>Pilih bioskop</option>
                         </select>
-                    </div>
+                        <div id="bioskop-tags" class="flex flex-wrap gap-2 mt-2">
 
-                  
+                        </div>
+                        <!-- Hidden input untuk submit array genre -->
+                        <input type="hidden" name="bioskop" id="bioskop-hidden">
+                    </div>                  
                 </div>
                 
             </div>
 
-             <div class="ms-5" id="genre-container">
+            <div class="ms-5" id="genre-container">
                 <label for="genre">Genre Favorit</label>
                 <select id="genre-select" class="mt-1 block  border-gray-300 rounded-md shadow-sm">
                     <option value="" disabled selected>Pilih genre</option>
@@ -162,6 +165,10 @@
                 </button>
             </div>
         </form>
+        <a href="{{ route('login') }}"
+        class="flex justify-center mt-5 w-[200px] py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >Sudah punya akun</a>
+        
     </div>
 </div>
 @push('script')
@@ -176,7 +183,7 @@ $(document).ready(function () {
     $('#genre-select').on('change', function () {
         let val = $(this).val();
         let text = $(this).find('option:selected').text();
-
+        console.log();
         // Cegah duplikasi
         if (val && !selectedGenres.includes(val)) {
             selectedGenres.push(val);
@@ -185,10 +192,11 @@ $(document).ready(function () {
                     <button type="button" data-val="${val}">&times;</button>
                 </span>`
             );
-            updateHiddenInput();
+            updateHiddenInput1();
         }
         // Reset select ke default
         $(this).val('');
+        console.log(selectedGenres);
     });
 
     // Hapus tag jika tombol x diklik
@@ -196,31 +204,65 @@ $(document).ready(function () {
         let val = $(this).data('val');
         selectedGenres = selectedGenres.filter(v => v != val);
         $(this).parent().remove();
-        updateHiddenInput();
+        updateHiddenInput1();
     });
 
-    function updateHiddenInput() {
+    function updateHiddenInput1() {    
         $('#genre-hidden').val(selectedGenres.join(','));
+        // $('#genre-hidden').val('test,test');
+    }
+
+    ///////////////////////////////////////////////
+
+     let selectedBioskop = [];
+
+    $('#bioskop-select').on('change', function () {
+        let val = $(this).val();
+        let text = $(this).find('option:selected').text();        
+        // Cegah duplikasi
+        if (val && !selectedBioskop.includes(val) && selectedBioskop.length <= 3) {
+            selectedBioskop.push(val);
+            $('#bioskop-tags').append(
+                `<span class="tag-capsule">${text}
+                    <button type="button" data-val="${val}">&times;</button>
+                </span>`
+            );
+            updateHiddenInput2();
+        }
+        // Reset select ke default
+        $(this).val('');
+    });
+
+    // Hapus tag jika tombol x diklik
+    $('#bioskop-tags').on('click', 'button', function () {
+        let val = $(this).data('val');
+        selectedBioskop = selectedBioskop.filter(v => v != val);
+        $(this).parent().remove();
+        updateHiddenInput2();
+    });
+
+    function updateHiddenInput2() {
+        $('#bioskop-hidden').val(selectedBioskop.join(','));
     }
 });
 
-    new TomSelect("#domisili-select", {
-        create: false,
-        sortField: {
-            field: "text",
-            direction: "asc"
-        }
-    });
+    // new TomSelect("#domisili-select", {
+    //     create: false,
+    //     sortField: {
+    //         field: "text",
+    //         direction: "asc"
+    //     }
+    // });
 
-    new TomSelect("#bioskop", {
-        maxItems: 3,
-        create: false,
-        sortField: {
-            field: "text",
-            direction: "asc"
-        },
-        placeholder: 'max 3'
-    });
+    // new TomSelect("#bioskop", {
+    //     maxItems: 3,
+    //     create: false,
+    //     sortField: {
+    //         field: "text",
+    //         direction: "asc"
+    //     },
+    //     placeholder: 'max 3'
+    // });
 
     // DOM change logic
     $('#genre-container').hide();
@@ -230,9 +272,7 @@ $(document).ready(function () {
             if ($(this).is(':checked')) {
                 $('#bioskop-container').show();
                 $('#genre-container').show();
-                console.log('di ceklis cuk');
-                
-                
+                console.log('di ceklis cuk');                                
             } else {
                 $('#bioskop-container').hide();
                 $('#genre-container').hide();
@@ -242,24 +282,36 @@ $(document).ready(function () {
 
     $('#domisili-select').on('change', function() {
         let wilayah = $(this).val();
-        let bioskopSelect = $('#bioskop')[0].tomselect;
+        // let bioskopSelect = $('#bioskop')[0].tomselect;
 
-        bioskopSelect.clearOptions();
-        bioskopSelect.addOption({ value: '', text: 'Loading...' });
-        bioskopSelect.refreshOptions();
+        // bioskopSelect.clearOptions();
+        // bioskopSelect.addOption({ value: '', text: 'Loading...' });
+        // bioskopSelect.refreshOptions();
 
         $.get(`/api/bioskop/search/${wilayah}`, function(data) {
-            bioskopSelect.clearOptions();
+            // bioskopSelect.clearOptions();
 
             if (data.length === 0) {
-                bioskopSelect.addOption({ value: '', text: 'Tidak ada bioskop' });
+                
+                $('#bioskop-select').empty();               
+                // bioskopSelect.addOption({ value: '', text: 'Tidak ada bioskop' });
+                $('#bioskop-select').append(`
+                    <option>Tidak ada Bioskop</option>
+                `)
             } else {
+                $('#bioskop-select').empty();
+                $('#bioskop-select').append(`
+                <option value="" disabled selected>Pilih bioskop</option>
+            `)
                 data.forEach(function(item) {
-                    bioskopSelect.addOption({ value: item.id, text: item.bioskop });
+                    // bioskopSelect.addOption({ value: item.id, text: item.bioskop });
+                    $('#bioskop-select').append(`
+                        <option value="${item.id}">${item.bioskop}</bioskop>
+                    `)
                 });
             }
 
-            bioskopSelect.refreshOptions();
+            // bioskopSelect.refreshOptions();
         });
     });
 

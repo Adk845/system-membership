@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 use App\Models\Anggota;
 use App\Models\User;
+use App\Models\UserLama;
 use App\Models\Kota;
 use App\Models\Bioskop;
 use App\Models\Peminatan;
@@ -21,20 +22,23 @@ class UserAnggota extends Seeder
         //SUPER ADMIN
         $super_admin = User::create([
             'name' => 'Super Admin',
-            'email' => 'admin@gmail.com',
+            'email' => 'main_admin@gmail.com',
             'password' => Hash::make('123123123'),
             'role' => 'admin'
         ]);
-        $admin_anggota = $super_admin->anggota()->create([
+        $main_admin = $super_admin->anggota()->create([
             'nama' => 'Super Admin',
             'tanggal_lahir' => '2000-01-15',
             'domisili' => 'Jakarta Selatan',
-            'email' => 'admin@gmail.com',
+            'email' => 'main_admin@gmail.com',
             'nomor' => '08577384728',
-            'genre' => 'horor,action,comedy',
+            'genre' => 'Horor,Action,Comedy',
             'level' => 'koordinator',
             'akses_level' => 'koordinator',
         ]);
+        $main_admin->peminatan()->attach([1,2,3]);
+        $main_admin->bioskop()->attach([1,2,3]);
+        $main_admin->kota()->attach(21);
 
         //koordinator dummy 
 
@@ -50,41 +54,63 @@ class UserAnggota extends Seeder
             'domisili' => 'Jakarta Selatan',
             'email' => 'admin_jaksel@gmail.com',
             'nomor' => '08577384728',
-            'genre' => 'horor,action,comedy,thriler',
+            'genre' => 'Horor,Action,Comedy,Thriler',
             'level' => 'koordinator',
             'akses_level' => 'koordinator',
         ]);
-
-        $admin_anggota->kota()->attach(31);
-
-        $kotas = [
-            '31' => 'Jakarta Selatan',
-            '18' => 'Bogor',
-            '12' => 'Bekasi',
-            '87' => 'Tangerang Selatan',
-            '25' => 'Depok'];
-
-        foreach ($kotas as $kota) {
-            for ($i = 1; $i <= 5; $i++) {
-                // Membuat user
-                $user = User::create([
-                    'name' => 'Member ' . $i . ' ' . $kota,
-                    'email' => strtolower(str_replace(' ', '', $kota)) . $i . '@example.com',
-                    'password' => Hash::make('123123123'),
+        $admin_anggota->peminatan()->attach([1,2,3]);
+        $admin_anggota->bioskop()->attach([1,2,3]);
+        $admin_anggota->kota()->attach(21);
+        
+        $oldUsers = UserLama::all();
+        foreach($oldUsers as $oldUser){
+             $user = User::create([
+                    'name' => $oldUser->name,
+                    'email' => $oldUser->email,
+                    // 'password' => Hash::make('123123123'),
+                    'password' => $oldUser->password,
                     'role' => 'member',
                 ]);
-
-                // Membuat anggota yang berelasi dengan user
-               $anggota = $user->anggota()->create([
-                    'nama' => 'Anggota ' . $kota . ' ' . $i,
-                    'tanggal_lahir' => '2000-01-15',
-                    'email' => strtolower(str_replace(' ', '', $kota)) . $i . '@example.com',
-                    'nomor' => '085773897546',
-                    'genre' => 'action, horor',
-                    'domisili' => $kota,
+                $anggota = $user->anggota()->create([
+                    'nama' => $oldUser->name,
+                    // 'tanggal_lahir' => '2000-01-15',
+                    'email' => $oldUser->email,
+                    // 'nomor' => '085773897546',
+                    'genre' => 'Action,Horor',
+                    'domisili' => 'Bekasi',
                 ]);
+
                 $anggota->peminatan()->attach([1,2,3]);
-            }
+                $anggota->bioskop()->attach([1,2]);
         }
+        // $kotas = [
+        //     '31' => 'Jakarta Selatan',
+        //     '18' => 'Bogor',
+        //     '12' => 'Bekasi',
+        //     '87' => 'Tangerang Selatan',
+        //     '25' => 'Depok'];
+
+        // foreach ($kotas as $kota) {
+        //     for ($i = 1; $i <= 5; $i++) {
+        //         // Membuat user
+        //         $user = User::create([
+        //             'name' => 'Member ' . $i . ' ' . $kota,
+        //             'email' => strtolower(str_replace(' ', '', $kota)) . $i . '@example.com',
+        //             'password' => Hash::make('123123123'),
+        //             'role' => 'member',
+        //         ]);
+
+        //         // Membuat anggota yang berelasi dengan user
+        //        $anggota = $user->anggota()->create([
+        //             'nama' => 'Anggota ' . $kota . ' ' . $i,
+        //             'tanggal_lahir' => '2000-01-15',
+        //             'email' => strtolower(str_replace(' ', '', $kota)) . $i . '@example.com',
+        //             'nomor' => '085773897546',
+        //             'genre' => 'action, horor',
+        //             'domisili' => $kota,
+        //         ]);
+        //         $anggota->peminatan()->attach([1,2,3]);
+        //     }
+        // }
     }
 }

@@ -45,12 +45,24 @@ Route::middleware('auth')->group(function () {
     Route::get('member_list', [AnggotaController::class, 'index'])->name('memberlist');
     Route::get('member_create', [AnggotaController::class, 'create'])->name('member.create');
     Route::post('member_create', [AnggotaController::class, 'store'])->name('member.create');
-    Route::post('member_edit', [AnggotaController::class, 'edit'])->name('member.edit');
+    Route::get('member_edit/{id_user}', [AnggotaController::class, 'edit'])->name('member.edit');
     Route::post('member_update', [AnggotaController::class, 'update'])->name('member.update');
     Route::get('member_delete/{id_user}', [AnggotaController::class, 'delete'])->name('member.delete');
 
+    //profile 
+    Route::get('/profile', [AnggotaController::class, 'profile'])->name('member.profile');
+    Route::post('/profile_update', [AnggotaController::class, 'profile_update'])->name('member.profile.update');
+
     //event
     Route::get('events', [EventsController::class, 'index'])->name('event.list');
+    Route::get('/events_admin', [EventsController::class, 'index_admin'])->name('events.index.admin');
+    Route::get('/events_create', [EventsController::class, 'create'])->name('events.create');    
+    Route::post('/admin/events', [EventsController::class, 'store'])->name('events.store');    
+    Route::get('/admin/events/{id}', [EventsController::class, 'show'])->name('events.show');
+    Route::get('/admin/events/{id}/edit', [EventsController::class, 'edit'])->name('events.edit');
+    Route::post('/admin/events/edit', [EventsController::class, 'update'])->name('events.update');
+    Route::get('/admin/events/{id}/delete', [EventsController::class, 'delete'])->name('events.delete');
+
 });
 
 require __DIR__.'/auth.php';

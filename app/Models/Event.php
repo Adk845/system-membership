@@ -9,6 +9,7 @@ use App\Models\Anggota;
 class Event extends Model
 {
     use HasFactory;
+    public $guarded = [];
     public function koordinator(){
         return $this->belongsTo(Anggota::class);
     }
