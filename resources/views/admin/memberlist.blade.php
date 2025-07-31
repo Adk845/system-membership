@@ -2,7 +2,15 @@
 
 @section('title', 'memberlist')
 
+@section('content_header')
+    <h1 class="mb-4">Event List</h1>
+@endsection
+
 @section('content')
+@php
+    $currentSort = request()->get('sort', 'created_at');
+    $currentDirection = request()->get('direction', 'desc');
+@endphp
 <div>
      @if (session('success'))
           <div id="popup-success" class="alert alert-success alert-dismissible fade show my-4 shadow-sm" role="alert" style="font-size: 1rem; animation: slideIn 0.5s ease-out;">
@@ -46,6 +54,15 @@
 
       <div class="m-3">
         <form method="GET" class="form-inline mb-3">
+            <div class="">
+                <select name="peminatan_id" class="form-control mr-2">
+                    <option value="">-- Semua Peminatan --</option>
+                    <option value="nonton" {{ request('peminatan_id') == 'nonton' ? 'selected' : '' }}>Nonton</option>
+                    <option value="seminar" {{ request('peminatan_id') == 'seminar' ? 'selected' : '' }}>Seminar</option>
+                    <option value="seminar berbayar" {{ request('peminatan_id') == 'seminar berbayar' ? 'selected' : '' }}>Seminar Berbayar</option>
+                </select>
+            </div>
+
             <input type="text" name="search" class="form-control mr-2" placeholder="Cari nama, domisili, email" value="{{ request('search') }}">
             
             <select name="per_page" class="form-control mr-2" onchange="this.form.submit()">
@@ -64,26 +81,45 @@
 
      
 
-        <table class="table">
-            <thead>
+        <table class="table table-hover table-striped mb-0 ">
+            <thead class="thead-dark">
                 <tr>
                 <th scope="col">No</th>
-                <th scope="col">Nama</th>
+                {{-- <th scope="col">Nama</th> --}}
+                {{-- <th> --}}
+                <th>
+                    <span>Nama</span>
+                    <span>
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'nama', 'direction' => 'asc', 'page' => 1]) }}"
+                            style="text-decoration: none; {{ $currentSort == 'nama' && $currentDirection == 'asc' ? 'font-weight: bold;' : '' }}">
+                                &#9650;
+                        </a>
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'nama', 'direction' => 'desc', 'page' => 1]) }}"
+                            style="text-decoration: none; {{ $currentSort == 'nama' && $currentDirection == 'desc' ? 'font-weight: bold;' : '' }}">
+                                &#9660;
+                        </a>
+                    </span>
+                </th>
                 <th scope="col">Domisili</th>
                 <th scope="col">Email</th>
                 <th scope="col">Level</th>
+                <th scope="col">Peminatan</th>
                 <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($member as $index => $item)
                     <tr>                
-                        <td>{{ ($member instanceof \Illuminate\Pagination\LengthAwarePaginator ? $member->firstItem() + $index : $loop->iteration) }}</td>
-                        <td>{{ $item->nama }}</td>
-                        <td>{{ $item->domisili }}</td>
-                        <td>{{ $item->user->email }}</td>
-                       <td>{{ \Illuminate\Support\Str::title($item->level) }}</td>
-                       
+                        <td style="vertical-align: middle">{{ ($member instanceof \Illuminate\Pagination\LengthAwarePaginator ? $member->firstItem() + $index : $loop->iteration) }}</td>
+                        <td style="vertical-align: middle">{{ $item->nama }}</td>
+                        <td style="vertical-align: middle">{{ $item->domisili }}</td>
+                        <td style="vertical-align: middle">{{ $item->user->email }}</td>
+                        <td style="vertical-align: middle">{{ \Illuminate\Support\Str::title($item->level) }}</td>
+                       <td class="d-flex flex-column">
+                            @foreach ($item->peminatan as $p)
+                                <span class="badge badge-info mb-1">{{ $p->peminatan }}</span>
+                            @endforeach
+                        </td>
                         <td>
                           <div class="dropdown">
                               <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">

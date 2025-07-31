@@ -21,84 +21,84 @@
     <div class=" w-full bg-white p-8 rounded-lg shadow-md">
         <h2 class="text-center flex text-2xl font-bold text-gray-900 mb-6">Register</h2>
 
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
             @csrf
 
             <div class="flex flex-wrap">
                 <!-- Name -->
                 <div class="mb-4 w-1/2 p-2">
-                    <label for="name" class="block text-sm font-medium text-gray-700">Username</label>
+                    <label for="name" class="block text-md font-medium text-gray-700">Username</label>
                     <input id="name" name="name" type="text" required autofocus
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         value="{{ old('name') }}">
                     @error('name')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        <p class="text-md text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Email -->
                 <div class="mb-4 w-1/2 p-2">
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <label for="email" class="block text-md font-medium text-gray-700">Email</label>
                     <input id="email" name="email" type="email" required
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         value="{{ old('email') }}">
                     @error('email')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        <p class="text-md text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
                 {{-- Nomor Telepon  --}}
                 <div class="mb-4 w-1/2 p-2">
-                    <label for="nomor" class="block text-sm font-medium text-gray-700">nomor</label>
+                    <label for="nomor" class="block text-md font-medium text-gray-700">nomor</label>
                     <input id="nomor" name="nomor" type="text" required
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         value="{{ old('nomor') }}">
                     @error('nomor')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        <p class="text-md text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 {{-- Tanggal Lahir --}}
                 <div class="mb-4 w-1/2 p-2">
-                    <label for="tanggalLahir" class="block text-sm font-medium text-gray-700">tanggal Lahir</label>
+                    <label for="tanggalLahir" class="block text-md font-medium text-gray-700">tanggal Lahir</label>
                     <input id="tanggal_lahir" name="tanggal_lahir" type="date" required
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         value="{{ old('tanggal_lahir') }}">
                     @error('tanggalLahir')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        <p class="text-md text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Password -->
                 <div class="mb-4 w-1/2 p-2">
-                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <label for="password" class="block text-md font-medium text-gray-700">Password</label>
                     <input id="password" name="password" type="password" required
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     @error('password')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        <p class="text-md text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Confirm Password -->
                 <div class="mb-4 w-1/2 p-2">
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
+                    <label for="password_confirmation" class="block text-md font-medium text-gray-700">Konfirmasi Password</label>
                     <input id="password_confirmation" name="password_confirmation" type="password" required
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
                 <!-- Nama Anggota -->
                 <div class="mb-4 w-1/2 p-2">
-                    <label for="nama_anggota" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                    <label for="nama_anggota" class="block text-md font-medium text-gray-700">Nama Lengkap</label>
                     <input id="nama_anggota" name="nama_anggota" type="text" required
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         value="{{ old('nama_anggota') }}">
                     @error('nama_anggota')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        <p class="text-md text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Domisili -->
                 <div class="mb-6 w-1/2 p-2">
-                    <label for="domisili" class="block text-sm font-medium text-gray-700">Domisili</label>
+                    <label for="domisili" class="block text-md font-medium text-gray-700">Domisili</label>
                     <select type="select" id="domisili-select" name="domisili"
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option name="" id="" disabled selected>Pilih Domisili</option>
@@ -109,6 +109,36 @@
                     </select>                    
                 </div>
 
+                <hr class="my-6 border-gray-300">
+
+                <div class="w-full mb-6">
+                    <label for="about_me" class="block text-md font-medium text-gray-700 mb-2">About Me</label>
+                    <textarea
+                        name="about_me"
+                        id="about_me"
+                        rows="3"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                    ></textarea>
+                </div>
+
+                <hr class="my-6 border-gray-300">
+
+
+                {{-- foto profile --}}
+                <div class="mb-3 w-1/2 p-2">
+                    <div>
+                        <label for="gambar" class="block text-md font-medium text-gray-700">Foto Profil</label>
+                        <input type="file" id="gambar" name="foto" accept="image/*" onchange="previewImage(event)"
+                            class="mt-1 block w-full text-md text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" />
+                    </div>
+
+                    <div id="preview-container" class="mt-3 hidden">
+                        <p class="mb-2 text-md font-semibold text-gray-700">Preview Foto Profil:</p>
+                        <img id="preview" class="rounded border" width="200" />
+                    </div>
+                </div>
+                
+                <div class="w-1/2"></div>
                 
                 <div class="kotener_peminatan_bioskop flex gap-4">                    
                     <div>
@@ -176,6 +206,25 @@
 {{-- TAMBAHIN FITUR TOM SELECT BIAR SEARCHABLE DROPDOWN NYA  --}}
 <script>
 
+ ///////////////
+    //UNTUK PREVIEW IMAGE FOTO PROFIL
+    ///////////////////////////////////
+function previewImage(event) {
+    const input = event.target;
+    const preview = document.getElementById('preview');
+    const container = document.getElementById('preview-container');
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            container.classList.remove('hidden');
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
 $(document).ready(function () {
     let selectedGenres = [];

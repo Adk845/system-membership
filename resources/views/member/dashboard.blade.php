@@ -175,6 +175,9 @@
         font-weight: 700;
         color: var(--primary);
     }
+    .title-data{
+        font-weight: bold;
+    }
 </style>
 {{-- @dd($data) --}}
 <div class="dashboard-container">
@@ -224,22 +227,15 @@
             </div>
         </div>
 
-    
-
-
-
-
 
         {{-- Kanan: Info Profil, Metrics, Ranking --}}
         <div class="col-md-7 col-right">        
 
-            <div class="info-card"> 
-                <h5>Profil Usaha</h5>
+            {{-- <div class="info-card"> 
+                <h5>Profil</h5>
                 <p>Isolutions Indonesia</p>              
             </div>
-            <div class="info-card">
-                
-                
+            <div class="info-card">                                
                 <div class="d-flex">                                           
                         <div class="ml-5 d-flex">
                             <p><strong>Status Keanggotaan</strong></p>
@@ -250,18 +246,70 @@
                         <div class="kontener_info ml-5 d-flex" >
                             <p><strong>Domisili </strong></p>
                             <p class="mr-2"><strong>:</strong></p>
-                            <p>{{ $kota }}</p>
-                            {{-- <h5>{{ $kota }}</h5> --}}
+                            <p>{{ $kota }}</p>                            
                         </div>
                         @if(Auth::user()->role == 'koordinator')
                             <div class="ml-5">
                                 <h5>Anggota</h5>
-                                <p class="text-center" style="font-size: 20px; font-weight: bold">{{ $member->count() }}</p>
-                                {{-- <p class="text-center">Anggota</p> --}}
-                                {{-- <h5>{{ $member->count() }} Anggota</h5> --}}
+                                <p class="text-center" style="font-size: 20px; font-weight: bold">{{ $member->count() }}</p>                                
                             </div>
                         @endif                    
                 </div>
+            </div> --}}
+
+            <div class="info-card"> 
+                <div class="info-card">
+                    <div class="d-flex align-items-center" id="foto_nama">                        
+                        <div>
+                            @if($anggota->foto)
+                                <img style="width: 100px; height:100px; border-radius: 50%;" src="{{ asset('storage/'.$anggota->foto) }}" alt="Foto Profil">
+                            @else
+                                <img style="width: 100px; height:100px; border-radius: 50%;" src="{{ asset('images/no_profile.jpg') }}" alt="Foto Default">
+                            @endif
+                        </div>                        
+                        <div class="ml-2 d-flex align-items-center">
+                            <p style="font-size: 20px; font-weight: 600; margin: 0;">{{ $anggota->nama }}</p>
+                            <i class="far fa-check-circle ml-2"></i>
+                        </div>
+                    </div>
+                    <div id="about_me" class="mt-4 mb-4">
+                        <p style="font-weight:500; color:rgb(115, 115, 115);">{{ $anggota->about_me }}</p>
+                    </div>
+
+                    <div id="data_diri">
+                        <table>
+                            <tr class="baris" >
+                                <td style="width: 180px" class="title-data">Nomor Keanggotaan</td>
+                                {{-- <td>:</td> --}}
+                                <td style="font-weight: 600">: {{ str_pad($user->id, 6, '0', STR_PAD_LEFT) }}</td>
+                            </tr>
+                            <tr class="baris">
+                                <td class="title-data">Status Keanggotaan</td>
+                                {{-- <td>:</td> --}}
+                                <td style="font-weight: 600">: {{ ucfirst($user->role) }}</td>
+                            </tr>
+                            <tr class="baris">
+                                <td class="title-data">Domisili</td>
+                                {{-- <td>:</td> --}}
+                                <td style="font-weight: 600">: {{ $anggota->domisili }}</td>
+                            </tr>
+                            <tr class="baris">
+                                <td class="title-data">Email</td>
+                                {{-- <td>:</td> --}}
+                                <td style="font-weight: 600">: {{ $anggota->email }}</td>
+                            </tr>
+                            <tr class="baris">
+                                <td class="title-data">Anggota Sejak</td>
+                                {{-- <td>:</td> --}}
+                                <td style="font-weight: 600">: {{ $anggota->created_at->format('Y') }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="pt-4 pb-4">
+                        <a href="{{ route('member.profile') }}" style="width: 300px" class="btn btn-outline-primary">Lihat profil</a>
+                    </div>
+                </div>
+                
             </div>
 
             <div class="metrics">

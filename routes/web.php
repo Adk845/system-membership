@@ -4,6 +4,7 @@ use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EventsController;
 use Illuminate\Support\Facades\Auth;
 
@@ -63,6 +64,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/events/edit', [EventsController::class, 'update'])->name('events.update');
     Route::get('/admin/events/{id}/delete', [EventsController::class, 'delete'])->name('events.delete');
 
-});
+    //notifikasi 
+    Route::get('mail/notification/{id_event}', [EmailController::class, 'send_notification'])->name('emails.notification');
+    // Route::get('mail/notification/broadcast/{id_event}', [EmailController::class, 'broadcast'])->name('emails.notification.broadcast');
+    Route::get('/broadcast/email/{id_event}', [EmailController::class, 'broadcast'])->name('broadcast.email');
+    Route::post('/broadcast/email/send', [EmailController::class, 'broadcastSend'])->name('broadcast.send');
 
+    //mail
+    Route::get('mail', [EmailController::class, 'index'])->name('emails.index');
+    Route::post('mail/send', [EmailController::class, 'sendSingleEmail'])->name('emails.send');
+
+
+});
 require __DIR__.'/auth.php';

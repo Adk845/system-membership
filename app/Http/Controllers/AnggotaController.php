@@ -6,7 +6,7 @@ use App\Models\Kota;
 use App\Models\Anggota;
 use App\Models\Bioskop;
 use App\Models\Peminatan;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -32,32 +32,85 @@ class AnggotaController extends Controller
     //     // return $member;
     //     return view('admin.memberlist', compact(['member', 'kota', 'user']));
     // }
+    // public function index(Request $request)
+    //     {
+            
+    //         $query = Anggota::with('user');
+
+    //         // Search
+    //         if ($request->has('search') && $request->search != '') {
+    //             $search = $request->search;
+    //             $query->where(function ($q) use ($search) {
+    //                 $q->where('nama', 'like', "%{$search}%")
+    //                 ->orWhere('domisili', 'like', "%{$search}%")
+    //                 ->orWhereHas('user', function ($q2) use ($search) {
+    //                     $q2->where('email', 'like', "%{$search}%");
+    //                 });
+    //             });
+    //         }
+
+    //         // Per page pagination
+    //         $perPage = $request->get('per_page', 10);
+    //         if ($perPage === 'all') {
+    //             $member = $query->orderBy('created_at', 'desc')->get(); // all data
+    //         } else {
+    //             $member = $query->orderBy('created_at', 'desc')->paginate((int)$perPage)->appends($request->all());
+    //         }
+
+    //         return view('admin.memberlist', compact('member'));
+    //     }
+
+
     public function index(Request $request)
-        {
-            $query = Anggota::with('user');
+{
+    $query = Anggota::with('user', 'peminatan');
 
-            // Search
-            if ($request->has('search') && $request->search != '') {
-                $search = $request->search;
-                $query->where(function ($q) use ($search) {
-                    $q->where('nama', 'like', "%{$search}%")
-                    ->orWhere('domisili', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($q2) use ($search) {
-                        $q2->where('email', 'like', "%{$search}%");
-                    });
-                });
-            }
+    // Search
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('nama', 'like', "%{$search}%")
+              ->orWhere('domisili', 'like', "%{$search}%")
+              ->orWhereHas('user', function ($q2) use ($search) {
+                  $q2->where('email', 'like', "%{$search}%");
+              });
+        });
+    }
 
-            // Per page pagination
-            $perPage = $request->get('per_page', 10);
-            if ($perPage === 'all') {
-                $member = $query->orderBy('created_at', 'desc')->get(); // all data
-            } else {
-                $member = $query->orderBy('created_at', 'desc')->paginate((int)$perPage)->appends($request->all());
-            }
+    // Filter by peminatan (many-to-many)
+    if ($request->filled('peminatan_id')) {
+        $peminatan = $request->peminatan_id;
+        $query->whereHas('peminatan', function ($q) use ($peminatan) {
+            $q->where('peminatan', $peminatan);
+        });
+    }
 
-            return view('admin.memberlist', compact('member'));
-        }
+    // Sorting
+    $sort = $request->get('sort', 'created_at');
+    $direction = $request->get('direction', 'desc');
+
+    if (!in_array($sort, ['nama', 'created_at'])) {
+        $sort = 'created_at';
+    }
+
+    if (!in_array($direction, ['asc', 'desc'])) {
+        $direction = 'desc';
+    }
+
+    $query->orderBy($sort, $direction);
+
+    // Pagination
+    $perPage = $request->get('per_page', 10);
+    if ($perPage === 'all') {
+        $member = $query->get();
+    } else {
+        $member = $query->paginate((int)$perPage)->appends($request->all());
+    }
+
+    return view('admin.memberlist', compact('member'));
+}
+
+
 
     ////////////////////////
     //UNTUK NAMPILIN FORM PROFILE
@@ -80,12 +133,13 @@ class AnggotaController extends Controller
             if($request->nonton){
                 array_push($peminatan, 1);
             }
-            if($request->seminar){
-                array_push($peminatan, 2);
-            }
             if($request->seminar_berbayar){
-                array_push($peminatan, 3);
+                array_push($peminatan, 2);
             }   
+            if($request->seminar){
+                array_push($peminatan, 3);
+            }
+            
         
             
             // Update nama user
@@ -97,11 +151,12 @@ class AnggotaController extends Controller
             $anggota = $user->anggota;        
             $anggota->update([  
                 'nama' => $request->nama,
+                'about_me' => $request->about_me,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'email' => $request->email,
                 'nomor' => $request->nomor,
                 'genre' => $request->genre,
-                'domisili' => $request->domisili,        
+                'domisili' => $request->domisili,   
             ]);
 
             //update peminatan 
@@ -120,6 +175,25 @@ class AnggotaController extends Controller
                 $bioskopIds = explode(',', $request->bioskop); // misal: ['26', '27', '28']
                 $anggota->bioskop()->sync($bioskopIds); // Ini akan update pivot table
             }
+            //==============================
+            // SIMPAN PERUBAHAN GAMBAR
+            //==============================
+
+             if ($request->hasFile('foto')) {
+                // Hapus gambar lama jika ada
+                if ($anggota->foto && Storage::disk('public')->exists($anggota->foto)) {
+                    Storage::disk('public')->delete($anggota->foto);
+                }
+
+                // Simpan gambar baru
+                $path = $request->file('foto')->store('member_image', 'public');
+
+                // Update kolom gambar
+                $anggota->update(['foto' => $path]);
+            }
+
+
+
                 if($request->password){
                     return redirect()->route('member.profile')->with('success', 'Profil dan Password berhasil diperbarui!');
                 }else {
@@ -142,10 +216,8 @@ class AnggotaController extends Controller
     ////////////////////////
     //UNTUK BUAT MEMBER BARU CREATE MEMBER
     ////////////////////////
-    public function store(Request $request){
-        
-      
-        try{
+    public function store(Request $request){              
+        try{            
             $bioskops = explode(',', $request->bioskop);    
             
             $request->validate([
@@ -163,16 +235,24 @@ class AnggotaController extends Controller
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
-                    'role' => 'member',
+                    'role' => $request->role,
                 ]);
 
+                //UPLOAD GAMBAR 
+                if($request->file('foto')){
+                  $fotoPath =  $request->file('foto')->store('member_image', 'public');
+                } else {
+                    $fotoPath = null;
+                }
                 $anggota = $user->anggota()->create([
                     'nama' => $request->nama_anggota,
+                    'about_me' => $request->about_me,
                     'email' => $request->email,
                     'nomor' => $request->nomor,
                     'domisili' => $request->domisili,
                     'tanggal_lahir' => $request->tanggal_lahir,
                     'genre' => $request->genre,
+                    'foto' => $fotoPath
                 ]);
 
                 // $anggota->peminatan()->attach([1,2,3]);
@@ -239,17 +319,21 @@ class AnggotaController extends Controller
             // Update nama user
             $user->update([
                 'name' => $request->name,
+                'role' => $request->role
             ]);    
 
             // Update data anggota
             $anggota = $user->anggota;        
             $anggota->update([  
                 'nama' => $request->name,
+                'about_me' => $request->about_me,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'email' => $request->email,
                 'nomor' => $request->nomor,
                 'genre' => $request->genre,
-                'domisili' => $request->domisili,        
+                'level' => $request->role,
+                'akses_level' => $request->role,
+                'domisili' => $request->domisili,       
             ]);
 
             //update peminatan 
@@ -267,6 +351,20 @@ class AnggotaController extends Controller
             if ($request->filled('bioskop')) {
                 $bioskopIds = explode(',', $request->bioskop); // misal: ['26', '27', '28']
                 $anggota->bioskop()->sync($bioskopIds); // Ini akan update pivot table
+            }
+
+            
+            if ($request->hasFile('foto')) {
+                // Hapus gambar lama jika ada
+                if ($anggota->foto && Storage::disk('public')->exists($anggota->foto)) {
+                    Storage::disk('public')->delete($anggota->foto);
+                }
+
+                // Simpan gambar baru
+                $path = $request->file('foto')->store('member_image', 'public');
+
+                // Update kolom gambar
+                $anggota->update(['foto' => $path]);
             }
 
             return redirect()->route('memberlist')->with('success', 'data member berhasil diperbarui!');

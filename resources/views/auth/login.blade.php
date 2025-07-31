@@ -61,7 +61,8 @@
         }
 
         .login-button {
-            background-color: #b71c1c;
+            background-color: #dad4d4;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             border: none;
         }
 
@@ -133,13 +134,18 @@
             <div class="flex items-center justify-between mt-4">
                 @if (Route::has('register'))
                     <a class="forgot-link" href="{{ route('register') }}">
-                        {{ __('Belum punya akun?') }}
+                        {{ __('Dont Have Account?') }}
                     </a>
                 @endif
 
                 <x-primary-button class="login-button">
                     {{ __('Log in') }}
                 </x-primary-button>
+            </div>
+            <div class="items-center flex">
+                <a class="forgot-link" href="{{ route('password.request') }}">
+                        {{ __('Forgot Password') }}
+                    </a>
             </div>
         </form>
     </div>

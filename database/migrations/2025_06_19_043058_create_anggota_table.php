@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('nama');
+            $table->text('about_me')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->string('email')->nullable();
             $table->string('nomor')->nullable();
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->string('level')->default('member');
             $table->string('akses_level')->default('member');
             $table->string('domisili')->nullable();
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }
