@@ -16,7 +16,7 @@ class PeminatanSeeder extends Seeder
           $data = [
             ['peminatan' => 'nonton'],
             ['peminatan' => 'seminar berbayar'],
-            ['peminatan' => 'seminar gratis'],
+            ['peminatan' => 'seminar'],
         ];
 
         Peminatan::insert($data);

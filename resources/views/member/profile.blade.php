@@ -76,7 +76,7 @@
         <div class="profile-title text-center mt-4 mb-5">
             Profile
         </div>
-        <form method="POST" action="{{ route('member.profile.update') }}" class="profile-form bg-white rounded-0 shadow-none px-0 px-md-5 py-4 mx-auto" style="max-width:900px;">
+        <form method="POST" action="{{ route('member.profile.update') }}" class="profile-form bg-white rounded-0 shadow-none px-0 px-md-5 py-4 mx-auto" style="max-width:900px;" enctype="multipart/form-data">
             @csrf
             @method('POST')
             <div class="row g-4 mb-3">
@@ -125,6 +125,42 @@
                     <input type="text" class="form-control" id="akses_level" name="akses_level" value="{{ old('akses_level', $anggota->akses_level) }}" {{ Auth::user()->role != 'admin' ? 'readonly' : ''  }}>
                 </div>
             </div>
+
+            <hr>
+            <div class="col-md-12">
+                <label for="about_me" class="profile-form-label">About Me</label>                
+                <textarea name="about_me" id="about_me" class="form-control" rows="3" >{{ old('about_me', $anggota->about_me) }}</textarea>
+            </div>
+            <hr>
+
+            <div class="form-group">
+                <label for="gambar">Foto Profil</label>
+                <input type="file" class="form-control-file" id="gambar" name="foto" accept="image/*" onchange="previewImage(event)">
+
+                <div id="preview-container" class="mt-3 d-none">
+                    <p class="mb-2 font-weight-bold">Preview Foto baru:</p>
+                    <img id="preview" class="img-thumbnail rounded border" style="max-height: 250px; object-fit: cover;">
+                </div>
+
+                {{-- <div id="preview-container2" class="mt-3">
+                    @if($anggota->foto)
+                        <p class="mb-2 font-weight-bold">Foto Saat Ini:</p>
+                        <img src="{{ asset('storage/' . $anggota->foto) }}" class="img-thumbnail rounded border" style="max-height: 250px; object-fit: cover;">
+                    @else
+                        <h2>Tidak ada Foto Profil</h2>
+                    @endif
+                </div> --}}
+
+                @if($anggota->foto)
+                    <div id="preview-container2" class="mt-3">
+                        <p class="mb-2 font-weight-bold">Foto Saat Ini:</p>
+                        <img src="{{ asset('storage/' . $anggota->foto) }}" class="img-thumbnail rounded border" style="max-height: 250px; object-fit: cover;">
+                    </div>
+                @endif
+            </div>
+
+            <hr>
+
             <div class="form-group">
                 <label>Peminatan</label><br>
                 <div class="form-check form-check-inline">
@@ -198,6 +234,32 @@
 
 @push('js')
 <script>
+
+    ///////////////
+    //PREVIEW FOTO PROFIL
+    //////////////////////////////
+
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('preview');
+        const container = document.getElementById('preview-container');
+        const container2 = document.getElementById('preview-container2');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            if (container2) {
+                container2.classList.add('d-none');
+            }            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                container.classList.remove('d-none');
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
 $(document).ready(function () {
     const anggotaId = $('#genre_bioskop').data('anggota');
     const link_api_genre = $('#genre_bioskop').data('get_genre');

@@ -14,25 +14,71 @@ class EventsController extends Controller
         $events = Event::orderBy('created_at', 'desc')->paginate(10);
         return view('events.event', compact('events'));
     }
-    
-    public function index_admin(Request $request){
-         $query = Event::query();
-            // Search
-            if ($request->has('search') && $request->search != '') {
-                $search = $request->search;
-                $query->where(function ($q) use ($search) {
-                    $q->where('nama', 'like', "%{$search}%");
-                });
-            }
-            // Per page pagination
-            $perPage = $request->get('per_page', 10);
-            if ($perPage === 'all') {
-                $events = $query->orderBy('created_at', 'desc')->get(); // all data
-            } else {
-                $events = $query->orderBy('created_at', 'desc')->paginate((int)$perPage)->appends($request->all());
-            }
-            return view('events.event_list', compact('events'));
+
+   public function index_admin(Request $request)
+{
+    $query = Event::query();
+
+    // Filter: Search
+    if ($request->has('search') && $request->search != '') {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('nama', 'like', "%{$search}%");
+        });
     }
+
+    // Filter: Category
+    if ($request->has('category') && $request->category != '') {
+        $query->where('jenis_peminatan', $request->category);
+    }
+
+    // Sorting
+    $sortField = $request->get('sort', 'created_at');
+    $sortDirection = $request->get('direction', 'desc');
+
+    // Whitelist untuk mencegah kolom tidak valid
+    $allowedSorts = ['nama', 'tanggal', 'created_at'];
+    $allowedDirections = ['asc', 'desc'];
+
+    if (!in_array($sortField, $allowedSorts)) {
+        $sortField = 'created_at';
+    }
+    if (!in_array($sortDirection, $allowedDirections)) {
+        $sortDirection = 'desc';
+    }
+
+    $query->orderBy($sortField, $sortDirection);
+
+    // Pagination
+    $perPage = $request->get('per_page', 10);
+    if ($perPage === 'all') {
+        $events = $query->get(); // Ambil semua tanpa paginate
+    } else {
+        $events = $query->paginate((int)$perPage)->appends($request->all());
+    }
+
+    return view('events.event_list', compact('events'));
+}
+
+    
+    // public function index_admin(Request $request){
+    //      $query = Event::query();
+    //         // Search
+    //         if ($request->has('search') && $request->search != '') {
+    //             $search = $request->search;
+    //             $query->where(function ($q) use ($search) {
+    //                 $q->where('nama', 'like', "%{$search}%");
+    //             });
+    //         }
+    //         // Per page pagination
+    //         $perPage = $request->get('per_page', 10);
+    //         if ($perPage === 'all') {
+    //             $events = $query->orderBy('created_at', 'desc')->get(); // all data
+    //         } else {
+    //             $events = $query->orderBy('created_at', 'desc')->paginate((int)$perPage)->appends($request->all());
+    //         }
+    //         return view('events.event_list', compact('events'));
+    // }
 
     public function create()
     {
@@ -46,30 +92,35 @@ class EventsController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        try{
+
+            $request->validate([
             'nama' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+            ]);
 
-        $gambarPath = $request->file('gambar')->store('event_images', 'public');
+            $gambarPath = $request->file('gambar')->store('event_images', 'public');
 
-        Event::create([
-            'anggota_id' => Auth::user()->anggota->id,
-            'createdBy' => Auth::user()->name,
-            'nama' => $request->nama,
-            'deskripsi' => $request->deskripsi,
-            'narasumber' => $request->narasumber,
-            'jenis_peminatan' => $request->jenis_peminatan,
-            'Lokasi' => $request->Lokasi,
-            'link' => $request->link,
-            'tanggal' => $request->tanggal,
-            'waktu' => $request->waktu,
-            'wilayah_koordinator' => $request->wilayah_koordinator,
-            'gambar' => $gambarPath,
-        ]);
+            Event::create([
+                'anggota_id' => Auth::user()->anggota->id,
+                'createdBy' => Auth::user()->name,
+                'nama' => $request->nama,
+                'deskripsi' => $request->deskripsi,
+                'narasumber' => $request->narasumber,
+                'jenis_peminatan' => $request->jenis_peminatan,
+                'Lokasi' => $request->Lokasi,
+                'link' => $request->link,
+                'tanggal' => $request->tanggal,
+                'waktu' => $request->waktu,
+                'wilayah_koordinator' => $request->wilayah_koordinator,
+                'gambar' => $gambarPath,
+            ]);
 
-        return redirect()->route('events.index.admin')->with('success', 'Event berhasil dibuat!');
+            return redirect()->route('events.index.admin')->with('Success', 'Event berhasil dibuat!');
+        }catch(\Exception){
+             return redirect()->route('events.index.admin')->with('Error', 'Terjadi Kesalahan');
+        }
     }
 
     public function delete($id){

@@ -51,13 +51,22 @@ class RegisteredUserController extends Controller
             'role' => 'member',
         ]);
 
+        //UPLOAD GAMBAR 
+        if($request->file('foto')){
+            $fotoPath =  $request->file('foto')->store('member_image', 'public');
+        } else {
+            $fotoPath = null;
+        }
+
         $anggota = $user->anggota()->create([
             'nama' => $request->nama_anggota,
+            'about_me' => $request->about_me,
             'email' => $request->email,
             'nomor' => $request->nomor,
             'domisili' => $request->domisili,
             'tanggal_lahir' => $request->tanggal_lahir,
             'genre' => $request->genre,
+            'foto' => $fotoPath
         ]);
 
         // $anggota->peminatan()->attach([1,2,3]);

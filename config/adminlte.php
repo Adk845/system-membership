@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'title' => 'MataSinema',
+    'title' => 'Membership',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -139,11 +139,11 @@ return [
     */
 
     'usermenu_enabled' => true,
-    'usermenu_header' => false,
-    'usermenu_header_class' => 'bg-dark',
-    'usermenu_image' => false,
+    'usermenu_header' => true,
+    'usermenu_header_class' => 'bg-light',
+    'usermenu_image' => true,
     'usermenu_desc' => false,
-    'usermenu_profile_url' => false,
+    'usermenu_profile_url' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -326,9 +326,15 @@ return [
             'can' => 'manage-blog',
         ],
 
-         [
-            'header' => 'Member',
-            'can' => ''
+        //  [
+        //     'header' => 'Member',
+        //     'can' => ''
+        // ],
+        [
+            'text' => 'Dashboard',
+            'url' => '/',
+            'icon' => 'fas fa-house-user',
+            'can' => ''  
         ],
         [
             'text'    => 'Account Settings',
@@ -350,7 +356,7 @@ return [
                 // ],
 
             ],
-        ],
+        ],        
         [
             'text'    => 'Event',
             'icon'    => 'fas fa-fw fa-calendar-day',
@@ -382,15 +388,35 @@ return [
                     'icon' => 'far fa-fw fa-file',
                     'can' => 'admin-koordinator'
                 ],
-                [
-                    'text' => 'Koordinator List',
-                    'url' => '/',
-                    'icon' => 'far fa-fw fa-file',
-                    'can' => 'admin-only'
-                ]
+                // [
+                //     'text' => 'Koordinator List',
+                //     'url' => '',
+                //     'icon' => 'far fa-fw fa-file',
+                //     'can' => 'admin-only'
+                // ]
              ]
             
-        ],          
+        ],   
+        // [
+        //     'text'    => 'Email',
+        //     'icon'    => 'fas fa-envelope',
+
+        //      'submenu' => [
+        //         [
+        //             'text' => 'Mail List',
+        //             'url' => '/mail',
+        //             'icon' => 'far fa-envelope',                    
+        //             'can' => 'admin-koordinator'
+        //         ],
+        //         // [
+        //         //     'text' => 'Koordinator List',
+        //         //     'url' => '',
+        //         //     'icon' => 'far fa-fw fa-file',
+        //         //     'can' => 'admin-only'
+        //         // ]
+        //      ]
+            
+        // ],          
 
         // [
         //     'text' => 'multilevel',

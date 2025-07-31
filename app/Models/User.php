@@ -46,18 +46,24 @@ class User extends Authenticatable
     ];
 
     public function isAdmin()
-{
-    return $this->role === 'admin';
-}
+    {
+        return $this->role === 'admin';
+    }
 
-public function isMember()
-{
-    return $this->role === 'member';
-}
+    public function isMember()
+    {
+        return $this->role === 'member';
+    }
 
-public function Anggota()
-{
-    return $this->hasOne(Anggota::class);
-}
+    public function Anggota()
+    {
+        return $this->hasOne(Anggota::class);
+    }
+
+    public function adminlte_profile_url()
+    {
+        return route('member.profile'); // sesuaikan dengan route yang kamu pakai untuk edit profil
+    }
+
 
 }

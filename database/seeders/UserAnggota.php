@@ -58,31 +58,81 @@ class UserAnggota extends Seeder
             'level' => 'koordinator',
             'akses_level' => 'koordinator',
         ]);
-        $admin_anggota->peminatan()->attach([1,2,3]);
+        $admin_anggota->peminatan()->attach([2]);
         $admin_anggota->bioskop()->attach([1,2,3]);
         $admin_anggota->kota()->attach(21);
         
-        $oldUsers = UserLama::all();
-        foreach($oldUsers as $oldUser){
-             $user = User::create([
-                    'name' => $oldUser->name,
-                    'email' => $oldUser->email,
-                    // 'password' => Hash::make('123123123'),
-                    'password' => $oldUser->password,
-                    'role' => 'member',
-                ]);
-                $anggota = $user->anggota()->create([
-                    'nama' => $oldUser->name,
-                    // 'tanggal_lahir' => '2000-01-15',
-                    'email' => $oldUser->email,
-                    // 'nomor' => '085773897546',
-                    'genre' => 'Action,Horor',
-                    'domisili' => 'Bekasi',
-                ]);
+        // GENERATE CUSTOM USER 
+        $emails = [
+            "ahmad" => 'dirosah.ilmahdi@gmail.com',
+            "habib" => 'Ha0abdurrahman@gmail.com',
+            "afif" => 'experimencobacoba@gmail.com'
+        ];
 
-                $anggota->peminatan()->attach([1,2,3]);
-                $anggota->bioskop()->attach([1,2]);
+        $emails = [
+            [
+                "nama" => "ahmad",
+                "email" => "dirosah.ilmahdi@gmail.com",
+                "peminatan" => 1
+            ],
+            [
+                "nama" => "habib",
+                "email" => "ha0abdurrahman@gmail.com",
+                "peminatan" => 2
+            ],
+            [
+                "nama" => "afif",
+                "email" => "experimencobacoba@gmail.com",
+                "peminatan" => 3
+            ]
+                            
+        ];
+
+        foreach($emails as $item){
+
+             $admin = User::create([
+            'name' => $item["nama"],
+            'email' => $item["email"],
+            'password' => Hash::make('123123123'),
+            'role' => 'member'
+        ]);
+        $admin_anggota = $admin->anggota()->create([
+            'nama' => $item["nama"],
+            'tanggal_lahir' => '2000-01-15',
+            'domisili' => 'Jakarta Selatan',
+            'email' => $item["email"],
+            'nomor' => '08577384728',
+            'genre' => 'Horor,Action,Comedy,Thriler',
+            'level' => 'member',
+            'akses_level' => 'member',
+        ]);
+        $admin_anggota->peminatan()->attach($item["peminatan"]);
+        $admin_anggota->bioskop()->attach([1,2,3]);
+        $admin_anggota->kota()->attach(21);
         }
+
+
+        // $oldUsers = UserLama::all();
+        // foreach($oldUsers as $oldUser){
+        //      $user = User::create([
+        //             'name' => $oldUser->name,
+        //             'email' => $oldUser->email,
+        //             // 'password' => Hash::make('123123123'),
+        //             'password' => $oldUser->password,
+        //             'role' => 'member',
+        //         ]);
+        //         $anggota = $user->anggota()->create([
+        //             'nama' => $oldUser->name,
+        //             // 'tanggal_lahir' => '2000-01-15',
+        //             'email' => $oldUser->email,
+        //             // 'nomor' => '085773897546',
+        //             'genre' => 'Action,Horor',
+        //             'domisili' => 'Bekasi',
+        //         ]);
+
+        //         $anggota->peminatan()->attach([1,2,3]);
+        //         $anggota->bioskop()->attach([1,2]);
+        // }
         // $kotas = [
         //     '31' => 'Jakarta Selatan',
         //     '18' => 'Bogor',

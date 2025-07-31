@@ -7,6 +7,11 @@
 @endsection
 
 @section('content')
+@php
+    $currentSort = request()->get('sort', 'created_at');
+    $currentDirection = request()->get('direction', 'desc');
+@endphp
+
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
             {{ session('success') }}
@@ -25,6 +30,12 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="m-3">
             <form method="GET" class="form-inline mb-3">
+                <select name="category" class="form-control mr-2">
+                    <option value="">Semua Kategori</option>
+                    <option value="nonton" {{ request('category') == 'nonton' ? 'selected' : '' }}>Nonton</option>
+                    <option value="seminar" {{ request('category') == 'seminar' ? 'selected' : '' }}>Seminar</option>
+                    <option value="seminar berbayar" {{ request('category') == 'seminar berbayar' ? 'selected' : '' }}>Seminar Berbayar</option>
+                </select>
                 <input type="text" name="search" class="form-control mr-2" placeholder="Cari nama event" value="{{ request('search') }}">
                 
                 <select name="per_page" class="form-control mr-2" onchange="this.form.submit()">
@@ -35,8 +46,7 @@
                 </select>
 
                 <button type="submit" class="btn btn-primary">Terapkan</button>
-            </form>
-            <a class="btn btn-primary" href="{{ route('member.create') }}">Crete new Member</a>
+            </form>            
         </div>
         <a href="{{ route('events.create') }}" class="btn btn-success shadow-sm">
             <i class="fas fa-plus-circle mr-1"></i> Add New Event
@@ -51,7 +61,19 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Poster</th>
-                        <th scope="col">Event Name</th>
+                        <th scope="col">
+                            Event Name
+                            <span>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'nama', 'direction' => 'asc', 'page' => 1]) }}"
+                                    style="text-decoration: none; {{ $currentSort == 'nama' && $currentDirection == 'asc' ? 'font-weight: bold;' : '' }}">
+                                        &#9650;
+                                </a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'nama', 'direction' => 'desc', 'page' => 1]) }}"
+                                    style="text-decoration: none; {{ $currentSort == 'nama' && $currentDirection == 'desc' ? 'font-weight: bold;' : '' }}">
+                                        &#9660;
+                                </a>
+                            </span>
+                        </th>
                         <th scope="col">Date</th>
                         <th scope="col">Time</th>
                         <th scope="col">Category</th>
@@ -71,7 +93,7 @@
                             {{-- <td>{{ \Carbon\Carbon::parse($event->waktu)->format('H:i') }}</td> --}}
                             <td><span class="badge badge-info">{{ ucwords($event->jenis_peminatan) }}</span></td>
                             <td>
-                               <div class="dropdown">
+                               <div class="dropdown dropleft">
                                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
                                         Option
                                     </a>
@@ -79,6 +101,8 @@
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="{{ route('events.delete', $event->id) }}" onclick=" return confirm('Apakah Anda Yakin Mau Menghapus Event Ini ? ')">Delete</a>
                                         <a class="dropdown-item" href="{{ route('events.edit', $event->id) }}">Edit</a>                                                                          
+                                        <a class="dropdown-item" id="kirim_notifikasi" href="{{ route('emails.notification', $event->id) }}">Send Email Notification</a>                                                                          
+                                        <a class="dropdown-item" id="broadcast" href="{{ route('broadcast.email', $event->id) }}">Broadcast Email</a> 
                                     </div>
                                 </div>   
                             </td>
@@ -96,7 +120,28 @@
 
         <!-- Pagination -->
         <div class="px-3 pb-3 d-flex justify-content-end">
-            {{ $events->links() }}
+            @if(method_exists($events, 'links'))
+                {{ $events->links() }}
+            @endif
         </div>
     </div>
+
+    <!-- Modal Loading -->
+    <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow-sm text-center p-5">
+                <div class="spinner-border text-primary mb-3" role="status"></div>
+                <h5 class="mb-0">Mengirim notifikasi email...</h5>
+            </div>
+        </div>
+    </div>    
+
 @endsection
+
+@push('js')
+<script>
+      $('#kirim_notifikasi').on('click', function () {
+            $('#loadingModal').modal('show'); // Tampilkan modal loading saat tombol diklik
+        });
+</script>
+@endpush

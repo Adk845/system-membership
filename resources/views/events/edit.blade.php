@@ -67,6 +67,7 @@
                 <div class="form-group">
                     <label for="gambar">Gambar (poster/flyer)</label>
                     <input type="file" class="form-control-file" id="gambar" name="gambar" accept="image/*" onchange="previewImage(event)">
+                    
                     <div id="preview-container" class="mt-3 d-none">
                         <p class="mb-2 font-weight-bold">Preview Gambar baru:</p>
                         <img id="preview" class="img-thumbnail rounded border" style="max-height: 250px; object-fit: cover;">

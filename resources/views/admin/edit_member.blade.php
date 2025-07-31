@@ -9,7 +9,7 @@
 @section('content')
     <div class="container">
     <h2>Edit Member</h2>
-    <form action="{{ route('member.update') }}" method="POST">
+    <form action="{{ route('member.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('POST')
 
@@ -46,6 +46,40 @@
                     @endforeach
                 </select>
             </div>
+
+            <hr>
+            <div class="col-md-12">
+                <label for="about_me" class="profile-form-label">About Me</label>                
+                <textarea name="about_me" id="about_me" class="form-control" rows="3" >{{ $anggota->about_me }}</textarea>
+            </div>
+            <hr>
+
+            <div>
+                <label for="role">Status Keanggotaan</label>
+                <select name="role" id="" class="form-control">
+                    <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="produser" {{ $user->role == 'produser' ? 'selected' : '' }}>Produser</option>
+                    <option value="koordinator" {{ $user->role == 'koordinator' ? 'selected' : '' }}>Koordinator</option>
+                    <option value="member" {{ $user->role == 'member' ? 'selected' : '' }}>Member</option>
+                </select>
+            </div>
+        </div>
+        <hr>
+        <div class="form-group">
+            <label for="gambar">Foto Profil</label>
+            <input type="file" class="form-control-file" id="gambar" name="foto" accept="image/*" onchange="previewImage(event)">
+
+            <div id="preview-container" class="mt-3 d-none">
+                <p class="mb-2 font-weight-bold">Preview Foto baru:</p>
+                <img id="preview" class="img-thumbnail rounded border" style="max-height: 250px; object-fit: cover;">
+            </div>
+
+            @if($anggota->foto)
+                <div id="preview-container2" class="mt-3">
+                    <p class="mb-2 font-weight-bold">Foto Saat Ini:</p>
+                    <img src="{{ asset('storage/' . $anggota->foto) }}" class="img-thumbnail rounded border" style="max-height: 250px; object-fit: cover;">
+                </div>
+            @endif
         </div>
 
         {{-- Peminatan --}}
@@ -102,16 +136,39 @@
                 
             </div>  
         </div>  
-         
-
-       
-
-        <button type="submit" class="btn btn-primary mt-5">Update</button>
+                        
+        <button type="submit" class="btn btn-primary m-4">Update</button>
     </form>
 </div>
 @push('js')
 <script>
+
+    ///////////////
+    //PREVIEW FOTO PROFIL
+    //////////////////////////////
+
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('preview');
+        const container = document.getElementById('preview-container');
+        const container2 = document.getElementById('preview-container2');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            container2.classList.add('d-none');
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                container.classList.remove('d-none');
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 $(document).ready(function () {
+    
+//////////////
+//BIOSKOP DOMISILI, DAN GENRE
+////////////////////////////////////
     const anggotaId = $('#genre_bioskop').data('anggota');
     const link_api_genre = $('#genre_bioskop').data('get_genre');
     const link_api_bioskop = $('#genre_bioskop').data('get_bioskop');
