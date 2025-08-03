@@ -17,39 +17,46 @@ class BroadcastEmail extends Mailable
      * Create a new message instance.
      */
 
-    public string $messageContent;
-    public function __construct(string $messageContent)
+    public $email;
+    public function __construct($email)
     {
-        $this->messageContent = $messageContent;
+        $this->email = $email;
+    }
+
+    public function build()
+    {        
+        return $this->subject($this->email->subject)
+                    ->view('emails.email_template.broadcast')
+                    ->with(['email' => $this->email]);
     }
 
     /**
      * Get the message envelope.
      */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Broadcast Email',
-        );
-    }
+    // public function envelope(): Envelope
+    // {
+    //     return new Envelope(
+    //         subject: 'Broadcast Email',
+    //     );
+    // }
 
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'email.email_template.broadcast',
-        );
-    }
+    // /**
+    //  * Get the message content definition.
+    //  */
+    // public function content(): Content
+    // {
+    //     return new Content(
+    //         view: 'email.email_template.broadcast',
+    //     );
+    // }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
-    }
+    // /**
+    //  * Get the attachments for the message.
+    //  *
+    //  * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+    //  */
+    // public function attachments(): array
+    // {
+    //     return [];
+    // }
 }

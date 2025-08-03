@@ -65,5 +65,8 @@ class User extends Authenticatable
         return route('member.profile'); // sesuaikan dengan route yang kamu pakai untuk edit profil
     }
 
+    public function email_histories(){
+        return $this->hasMany(EmailHistory::class, 'sent_by');
+    }
 
 }

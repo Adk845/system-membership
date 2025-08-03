@@ -7,8 +7,11 @@ use App\Mail\BroadcastNotifikasi;
 use App\Mail\SingleMail;
 use App\Mail\notifikasi;
 use App\Models\Anggota;
+use App\Models\EmailHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Peminatan;
 use App\Models\Event;
@@ -18,31 +21,34 @@ class EmailController extends Controller
 
     public function index(Request $request)
         {
-            // Ambil semua peminatan (untuk filter dropdown)
-            $peminatans = Peminatan::all();
+            $user = Auth::user();
+            $emails = $user->email_histories;
+            return view('emails.index', compact('emails'));
+            // // Ambil semua peminatan (untuk filter dropdown)
+            // $peminatans = Peminatan::all();
 
-            // Mulai query anggota
-            $query = Anggota::query();
+            // // Mulai query anggota
+            // $query = Anggota::query();
 
-            // Filter berdasarkan peminatan (many-to-many)
-            if ($request->filled('peminatan_id')) {
-                $query->whereHas('peminatan', function ($q) use ($request) {
-                    $q->where('peminatan_id', $request->peminatan_id);
-                });
-            }
+            // // Filter berdasarkan peminatan (many-to-many)
+            // if ($request->filled('peminatan_id')) {
+            //     $query->whereHas('peminatan', function ($q) use ($request) {
+            //         $q->where('peminatan_id', $request->peminatan_id);
+            //     });
+            // }
 
-            // Search berdasarkan nama atau email
-            if ($request->filled('search')) {
-                $search = $request->search;
-                $query->where(function ($q) use ($search) {
-                    $q->where('nama', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%");
-                });
-            }
+            // // Search berdasarkan nama atau email
+            // if ($request->filled('search')) {
+            //     $search = $request->search;
+            //     $query->where(function ($q) use ($search) {
+            //         $q->where('nama', 'like', "%$search%")
+            //         ->orWhere('email', 'like', "%$search%");
+            //     });
+            // }
 
-            // Ambil hasil akhir
-            $anggota = $query->with('peminatan')->get();            
-            return view('emails.index', compact('anggota', 'peminatans'));
+            // // Ambil hasil akhir
+            // $anggota = $query->with('peminatan')->get();            
+            // return view('emails.index', compact('anggota', 'peminatans'));
         }
     /////////////////////////////
     //=====NOTIFICATION=====
@@ -114,6 +120,82 @@ class EmailController extends Controller
         return view('broadcast.preview', compact('events', 'selectedEvent'));
     }
 
+    //====================================================
+    //BUAT CUSTOM EMAIL DAN KIRIM EMAIL ==================
+    // ===================================================
+    //nampilin form
+    public function create_email(){
+        return view('emails.create');
+    }
+    //simpen draft
+    public function store_email(Request $request){        
+        $email = (object)[
+            'subject' => $request->subject,
+            'body' => $request->body
+        ];
+        if($request->picture){
+            $picturePath = $request->file('picture')->store('email_images', 'public');
+        }else {
+            $picturePath = null;
+        }
+        $email = EmailHistory::create([
+            'sent_by' => Auth::user()->id,
+            'subject' => $email->subject,
+            'body' => $email->body,
+            'status' => 'Pending',
+            'image_url' => $picturePath
+        ]);                    
+        return redirect()->route('emails.penerima', $email->id);
+    }
+
+    // buka form untuk edit email 
+    public function edit_email($email_id){
+        $email = EmailHistory::findOrFail($email_id);
+        return view('emails.edit', compact('email'));
+    }
+    //kirim hasil perubahan email ke database
+    public function update_email(Request $request){
+        $email = EmailHistory::findOrFail($request->email_id);        
+        $email->update([            
+            'subject' => $request->subject,
+            'body' => $request->body,
+            'status' => 'Pending',            
+        ]);
+
+        if($request->hasFile('picture')){
+            if($email->image_url && Storage::disk('public')->exists($email->image_url)){
+                Storage::disk('public')->delete($email->image_url);
+            }
+            $picturePath = $request->file('picture')->store('email_images', 'public');
+            $email->update([
+                'image_url' => $picturePath
+            ]);
+        }
+        
+        return redirect()->route('emails.penerima', $request->email_id);           
+    }
+
+    //milih penerima
+    public function list_penerima($email_id){        
+        $anggota = Anggota::all();                     
+        return view('emails.penerima', compact('anggota', 'email_id'));
+    }
+    
+    //kirim email broadcast yang ada di layanan email
+    public function send_email(Request $request){
+        $email_content = EmailHistory::findOrFail($request->email_id);         
+        foreach($request->emails as $email){
+            Mail::to($email)->queue(new BroadcastEmail($email_content));
+        }
+        $email_content->update([
+            'status' => 'Terkirim'
+        ]);
+
+        return redirect()->route('emails.index')->with('success', 'email berhasil terkirim');
+    }
+
+
+    // Fungsi kirim broadcast untuk yang ada di halaman event
     // Fungsi untuk mengirim email
    public function broadcastsend(Request $request)
     {

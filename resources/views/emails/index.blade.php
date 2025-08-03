@@ -5,74 +5,75 @@
 @section('content')
 <h1 class="mb-4">Broadcast Email</h1>
 
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+@endif
 {{-- Filter Form --}}
-<form method="GET" action="{{ route('emails.index') }}" class="mb-4">
-    <div class="form-row">
-        <div class="col-md-4">
-            <select name="peminatan_id" class="form-control">
-                <option value="">-- Semua Peminatan --</option>
-                @foreach ($peminatans as $peminatan)
-                    <option value="{{ $peminatan->id }}" {{ request('peminatan_id') == $peminatan->id ? 'selected' : '' }}>
-                        {{ $peminatan->peminatan }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-4">
-            <input type="text" name="search" class="form-control" placeholder="Cari nama atau email..." value="{{ request('search') }}">
-        </div>
-        <div class="col-md-4">
-            <button type="submit" class="btn btn-primary">Filter</button>
-            <a href="{{ route('emails.index') }}" class="btn btn-secondary">Reset</a>
+
+
+<div class="row">
+    <div class="card shadow-lg border-0 rounded-lg col p-0 col mx-2" >
+        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                    <strong>Information</strong>                
+                </div>
+        <div class="card-body">
+        <a href="{{ route('emails.create') }}" class="btn btn-outline-primary">Create Email</a>
         </div>
     </div>
-</form>
-
-{{-- Table List Anggota --}}
-<form method="POST" action="{{ route('emails.send') }}">
-    @csrf
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <strong>Daftar Anggota</strong>
+    <div class="card shadow-lg border-0 rounded-lg col p-0 col mx-2">
+        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                    <strong>Information</strong>                
+                </div>
+        <div class="card-body">
+        <h1>information</h1>
         </div>
-        <div class="card-body p-0">
-            <table class="table table-bordered table-hover m-0">
-                <thead>
+    </div>
+</div>
+<div class="card shadow-lg border-0 rounded-lg col p-0">
+    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                <strong>Riwayat Email</strong>                
+            </div>
+    <div class="card-body">
+        <div>
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
                     <tr>
-                        <th>No</th>
-                        <th width="9%"><input type="checkbox" id="checkAll">Check All</th>
-                        <th>Nama</th>
-                        <th>Email</th>
-                        <th>Peminatan</th>
+                        <th style="width: 50px">No</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Waktu Terkirim</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($anggota as $index => $item)
+                    <tr>
+                        <td>1</td>
+                        <td>test</td>
+                        <td>test</td>
+                        <td>12:00</td>
+                    </tr>
+                    @foreach ($emails as $index => $email)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td><input type="checkbox" name="anggota_id[]" value="{{ $item->id }}"></td>
-                            <td>{{ $item->nama }}</td>
-                            <td>{{ $item->email }}</td>
-                            <td>
-                                @foreach ($item->peminatan as $p)
-                                    <span class="badge badge-info">{{ $p->peminatan }}</span>
-                                @endforeach
-                            </td>
+                            <td>{{ $email->subject }}</td>
+                            <td>{{ $email->status }}</td>                            
+                            <td>{{ $email->created_at->format('d M Y H:i') }}</td>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="text-center">Tidak ada data anggota.</td>
-                        </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
-        <div class="dropdown-menu">
-            <a class="dropdown-item" href="{{ route('member.delete', $item->user->id) }}" onclick=" return confirm('Apakah Anda Yakin Mau Menghapus User Ini ? ')">Delete</a>
-            <a class="dropdown-item" href="{{ route('member.edit', $item->user->id) }}">Edit</a>                                                                  
-        </div>
     </div>
-</form>
+</div>
 @endsection
 
 @push('js')

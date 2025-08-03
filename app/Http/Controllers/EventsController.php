@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Anggota;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Event;
+
+use function PHPUnit\Framework\returnSelf;
 
 class EventsController extends Controller
 {
@@ -80,15 +84,36 @@ class EventsController extends Controller
     //         return view('events.event_list', compact('events'));
     // }
 
+
+    public function show($id){
+       try{
+        $event = Event::findOrFail($id);
+        $anggota = Auth::user()->anggota;
+        $peserta = $event->anggotaJoined;
+        $terdaftar = true;
+
+        if($anggota->eventsJoined()->where('events_id', $id)->exists()){
+            $terdaftar = true;
+        } else {
+            $terdaftar = false;
+        }     
+        return $peserta->count();
+        if(Auth::user()->role == 'admin'){
+            return view('events.show', compact('event', 'terdaftar', 'peserta'));
+        }else{
+            return view('events.show', compact('event', 'terdaftar'));
+        }
+       }catch(\Exception){
+            return redirect()->back()->with('error', 'terjadi kesalahan tidak dapat menampilkan');
+       }
+                       
+    }   
+
     public function create()
     {
         return view('events.create');
     }
 
-    public function show(Request $request){
-        $event = Event::where('id', $request->id)->first();        
-        return view('events.show', compact('event'));
-    }    
 
     public function store(Request $request)
     {
@@ -188,12 +213,35 @@ class EventsController extends Controller
                 $event->update(['gambar' => $path]);
             }
 
-
-
                 return redirect()->route('events.index.admin')->with('success', 'Event berhasil diperbarui.');
                 } catch(\Exception){
                 return redirect()->route('events.index.admin')->with('error', 'Event berhasil diperbarui.');
             }
         } 
+
+
+        //=================================
+        //==========REGISTER EVENT=========
+        //=================================
+
+        public function register($event_id){            
+           try{
+                $anggota = Auth::user()->anggota;
+                $anggota->eventsJoined()->syncWithoutDetaching([$event_id]);
+                return redirect()->back()->with('success', "Anda telah terdaftar pada event ini");
+           }catch(\Exception){
+                return redirect()->back()->with('error', "Terjadi kesalahan");
+           }            
+        }
+
+        public function batalkan($event_id){
+            try{
+                $anggota = Auth::user()->anggota;
+                $anggota->eventsJoined()->detach([$event_id]);
+                return redirect()->back()->with('success', "Berhasil Membatalkan Pendaftaran");
+           }catch(\Exception){
+                return redirect()->back()->with('error', "Terjadi kesalahan");
+           }            
+        }
 
 }

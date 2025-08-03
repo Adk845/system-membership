@@ -8,57 +8,9 @@
 @endsection
 
 @section('content')
-<style>
-    .profile-bg {
-        background: linear-gradient(120deg, #f8fafc 60%, #e3f0ff 100%);
-        min-height: 100vh;
-        padding: 0;
-        margin: 0 -24px;
-    }
-    .profile-form-label {
-        font-weight: 600;
-        color: #1d3557;
-    }
-    .profile-form input[readonly] {
-        background: #f1f3f6;
-        color: #888;
-    }
-    .profile-form input:focus {
-        border-color: #1976d2;
-        box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.1);
-    }
-    .profile-title {
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: #1976d2;
-        margin-bottom: 2rem;
-        letter-spacing: 1px;
-    }
-    .profile-form .btn-success {
-        background: #1976d2;
-        border: none;
-        font-weight: 600;
-        letter-spacing: 1px;
-        transition: background 0.2s;
-    }
-    .profile-form .btn-success:hover {
-        background: #145ea8;
-    }
-    @media (max-width: 768px) {
-        .profile-title { font-size: 1.5rem; }
-    }
-    @keyframes slideIn {
-    0% {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-</style>
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+@endsection
 <div class="profile-bg">
     @if (session('success'))
         <div id="popup-message" class="alert alert-success alert-dismissible fade show my-4 shadow-sm" role="alert" style="font-size: 1rem; animation: slideIn 0.5s ease-out;">
@@ -74,7 +26,7 @@
 
     <div class="container-fluid px-0">
         <div class="profile-title text-center mt-4 mb-5">
-            Profile
+            <p style="font-size: 30px" id="profile-title">Profile</p>
         </div>
         <form method="POST" action="{{ route('member.profile.update') }}" class="profile-form bg-white rounded-0 shadow-none px-0 px-md-5 py-4 mx-auto" style="max-width:900px;" enctype="multipart/form-data">
             @csrf
@@ -179,7 +131,7 @@
             <div class="container"  id="genre_bioskop" data-anggota="{{ $anggota->id }}" data-get_bioskop="{{ route('get_bioskop', $anggota->id) }}" data-get_genre="{{ route('get_genre', $anggota->id) }}">
                 <div class="row">
 
-                    <div class="col-sm col-2">
+                    <div class="col-sm ">
                         <div id="bioskop-container">
                             <label for="bioskop">Bioskop</label>
                             <select id="bioskop-select" name="bioskop" class="form-control">
@@ -193,7 +145,7 @@
                         </div> 
                     </div>
 
-                    <div class="ms-5 col-sm col-2" id="genre-container">
+                    <div class="ms-5 col-sm" id="genre-container">
                         <label for="genre">Genre Favorit</label>
                         <select id="genre-select" class="form-control">
                             <option value="" disabled selected>Pilih genre</option>
