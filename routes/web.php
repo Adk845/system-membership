@@ -64,15 +64,33 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/events/edit', [EventsController::class, 'update'])->name('events.update');
     Route::get('/admin/events/{id}/delete', [EventsController::class, 'delete'])->name('events.delete');
 
+    //event register
+    Route::get('/events/register/{id_event}', [EventsController::class, 'register'])->name('events.register');
+    Route::get('/events/register/batalkan/{id_event}', [EventsController::class, 'batalkan'])->name('events.register.batalkan');
+
     //notifikasi 
     Route::get('mail/notification/{id_event}', [EmailController::class, 'send_notification'])->name('emails.notification');
     // Route::get('mail/notification/broadcast/{id_event}', [EmailController::class, 'broadcast'])->name('emails.notification.broadcast');
     Route::get('/broadcast/email/{id_event}', [EmailController::class, 'broadcast'])->name('broadcast.email');
     Route::post('/broadcast/email/send', [EmailController::class, 'broadcastSend'])->name('broadcast.send');
 
-    //mail
-    Route::get('mail', [EmailController::class, 'index'])->name('emails.index');
-    Route::post('mail/send', [EmailController::class, 'sendSingleEmail'])->name('emails.send');
+    //tampilin dashboard awal email 
+    Route::get('mail', [EmailController::class, 'index'])->name('emails.index');    
+    ///////////////////////
+    //broadcast create//
+    ////////////////////
+    //nampilin form 
+    Route::get('mail/create', [EmailController::class, 'create_email'])->name('emails.create');
+    //menyimpan draft email sebelum dikirim
+    Route::post('mail/create/store', [EmailController::class, 'store_email'])->name('emails.store');
+    //nampilin halaman buat milih penerima
+    Route::get('mail/create/penerima/{email_id}', [EmailController::class, 'list_penerima'])->name('emails.penerima');
+    //nampilin form edit email, untuk edit email, untuk tombol back
+    Route::get('mail/edit/{email_id}', [EmailController::class, 'edit_email'])->name('emails.edit');
+    //simpan perubahan email
+    Route::post('mail/update/', [EmailController::class, 'update_email'])->name('emails.update');
+    //kirim email ke penerima 
+    Route::post('mail/send', [EmailController::class, 'send_email'])->name('emails.send');
 
 
 });

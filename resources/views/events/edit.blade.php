@@ -7,6 +7,10 @@
 @endsection
 
 @section('content')
+@push('css')
+      <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+@endpush
+
     <div class="card shadow-sm">
         <div class="card-body">
             <form action="{{ route('events.update') }}" method="POST" enctype="multipart/form-data">
@@ -18,10 +22,17 @@
                     <input type="text" class="form-control" id="nama" name="nama" value="{{ $event->nama }}" required>
                 </div>
 
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="deskripsi">Deskripsi</label>
                     <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" required>{{ $event->deskripsi }}</textarea>
+                </div> --}}
+
+                <div class="form-group">
+                    <label for="deskripsi">Deskripsi</label>
+                    <input id="deskripsi" type="hidden" name="deskripsi" value="{{ $event->deskripsi }}">
+                    <trix-editor input="deskripsi"></trix-editor>
                 </div>
+
 
                 <div class="form-group">
                     <label for="narasumber">Narasumber</label>
@@ -88,7 +99,8 @@
         </div>
     </div>
 
-     @push('js')
+    @push('js')
+        <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
         <script>
             function previewImage(event) {
                 const input = event.target;

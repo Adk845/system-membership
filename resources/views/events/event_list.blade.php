@@ -101,7 +101,7 @@
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="{{ route('events.delete', $event->id) }}" onclick=" return confirm('Apakah Anda Yakin Mau Menghapus Event Ini ? ')">Delete</a>
                                         <a class="dropdown-item" href="{{ route('events.edit', $event->id) }}">Edit</a>                                                                          
-                                        <a class="dropdown-item" id="kirim_notifikasi" href="{{ route('emails.notification', $event->id) }}">Send Email Notification</a>                                                                          
+                                        <a class="dropdown-item" id="kirim_notifikasi" href="{{ route('emails.notification', $event->id) }}">Send Email Notification</a>
                                         <a class="dropdown-item" id="broadcast" href="{{ route('broadcast.email', $event->id) }}">Broadcast Email</a> 
                                     </div>
                                 </div>   
@@ -140,8 +140,17 @@
 
 @push('js')
 <script>
-      $('#kirim_notifikasi').on('click', function () {
-            $('#loadingModal').modal('show'); // Tampilkan modal loading saat tombol diklik
-        });
+    $('#kirim_notifikasi').on('click', function (event) {
+        event.preventDefault(); // cegah link langsung berjalan
+
+        const confirmResult = confirm('Lanjut Mengirimkan Notifikasi ?');
+
+        if (confirmResult) {
+            $('#loadingModal').modal('show'); // tampilkan loading
+            window.location.href = $(this).attr('href'); // lanjutkan ke URL
+        }
+        // Jika tidak, tidak terjadi apa-apa
+    });
 </script>
+
 @endpush

@@ -20,7 +20,6 @@ class Anggota extends Model
         return $this->belongsToMany(Peminatan::class);
         //yang dibawah mendefinisikan pivot table secara explisit
         // return $this->belongsToMany(Peminatan::class, 'anggota_peminatan');
-
     }
 
     public function kota(){
@@ -28,11 +27,11 @@ class Anggota extends Model
     }
     public function bioskop(){
         return $this->belongsToMany(Bioskop::class);
-    }
+    }    
     public function eventsCreated(){
         return $this->hasMany(Event::class);
     }
     public function eventsJoined(){
-        return $this->belongsToMany(Event::class, 'anggota_events');
+         return $this->belongsToMany(Event::class, 'anggota_events', 'anggota_id', 'events_id');
     }
 }

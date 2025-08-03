@@ -8,6 +8,25 @@
 @endsection
 
 @section('content')
+
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/event.css') }}">
+@endsection
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+@endif
+
 <div class="container">
     <div class="row">
         @forelse($events as $event)
@@ -29,8 +48,9 @@
                             <span class="badge bg-info text-dark mb-2">{{ $event->jenis_peminatan }}</span>
                             <a href="{{ route('events.show', $event->id) }}" class="btn btn-outline-primary btn-sm w-100 mb-2">Detail Event</a>
                             @if($event->link)
-                                <a href="{{ $event->link }}" class="btn btn-outline-primary btn-sm w-100">Link Event</a>                            
+                                <a href="{{ $event->link }}" class="btn btn-outline-primary btn-sm w-100 mb-2">Link Event</a>                            
                             @endif
+                            <a href="{{ route('events.register', $event->id) }}" class="btn btn-outline-primary btn-sm w-100 mb-2">Daftar Event</a>
                         </div>
                     </div>
                     <div class="card-footer bg-white border-0 small text-muted">

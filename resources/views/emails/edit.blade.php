@@ -15,17 +15,17 @@
 
 <div class="card shadow-lg border-0 rounded-lg col p-0 mx-2">
     <div class="card-body">
-        <form action="{{ route('emails.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('emails.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
-
+            <input type="hidden" name="email_id" value="{{ $email->id }}">
             <div class="form-group">
                 <label for="subject">Email Subject</label>
-                <input type="text" name="subject" class="form-control" required>
+                <input type="text" name="subject" class="form-control" value="{{ $email->subject }}" required>
             </div>
 
             <div class="form-group">
                 <label for="body">Email Body </label>
-                <input id="body" type="hidden" name="body">
+                <input id="body" type="hidden" name="body" value="{{ $email->body }}">
                 <trix-editor input="body"></trix-editor>
             </div>
 

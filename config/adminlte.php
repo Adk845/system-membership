@@ -397,26 +397,26 @@ return [
              ]
             
         ],   
-        // [
-        //     'text'    => 'Email',
-        //     'icon'    => 'fas fa-envelope',
+        [
+            'text'    => 'Email',
+            'icon'    => 'fas fa-envelope',
 
-        //      'submenu' => [
-        //         [
-        //             'text' => 'Mail List',
-        //             'url' => '/mail',
-        //             'icon' => 'far fa-envelope',                    
-        //             'can' => 'admin-koordinator'
-        //         ],
-        //         // [
-        //         //     'text' => 'Koordinator List',
-        //         //     'url' => '',
-        //         //     'icon' => 'far fa-fw fa-file',
-        //         //     'can' => 'admin-only'
-        //         // ]
-        //      ]
+             'submenu' => [
+                [
+                    'text' => 'Mail List',
+                    'url' => '/mail',
+                    'icon' => 'far fa-envelope',                    
+                    'can' => 'admin-koordinator'
+                ],
+                // [
+                //     'text' => 'Koordinator List',
+                //     'url' => '',
+                //     'icon' => 'far fa-fw fa-file',
+                //     'can' => 'admin-only'
+                // ]
+             ]
             
-        // ],          
+        ],          
 
         // [
         //     'text' => 'multilevel',

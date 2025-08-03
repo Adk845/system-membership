@@ -6,3 +6,9 @@
     height: 0px; /* atau ukuran sesuai kebutuhan */
     width: 0px;
 }
+
+@media (max-width: 568) {
+      .main-sidebar{
+            background: #f7f8fa;
+        }
+}
