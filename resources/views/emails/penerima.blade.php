@@ -3,12 +3,17 @@
 @section('title', 'List Penerima')
 
 @section('content')
-<h1 class="mb-4">Pilih Penerima Email: {{ $email_id }}</h1>
+@php
+    $currentSort = request('sort', 'nama');
+    $currentDirection = request('direction', 'asc');
+@endphp
+
+<h1 class="mb-4">Pilih Email Tujuan</h1>
 
 {{-- Filter Form --}}
-{{-- <form method="GET" action="{{ route('emails.penerima', $email) }}" class="mb-4">    
+<form method="GET" action="{{ route('emails.penerima', $email_id) }}" class="mb-4">    
     <div class="form-row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <select name="peminatan_id" class="form-control">
                 <option value="">-- Semua Peminatan --</option>
                 @foreach ($peminatans as $peminatan)
@@ -18,15 +23,25 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-4">
-            <input type="text" name="search" class="form-control" placeholder="Cari nama atau email..." value="{{ request('search') }}">
+        <div class="col-md-3">
+            <select name="role" class="form-control">
+                <option value="">-- Semua Role --</option>
+                <option value="member" {{ request('role') == 'member' ? 'selected' : '' }}>Member</option>
+                <option value="koordinator" {{ request('role') == 'koordinator' ? 'selected' : '' }}>Koordinator</option>                
+                <option value="produser" {{ request('role') == 'produser' ? 'selected' : '' }}>Produser</option>
+                <!-- Tambah sesuai role lainnya -->
+            </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <input type="text" name="search" class="form-control" placeholder="Cari nama/email..." value="{{ request('search') }}">
+        </div>
+        <div class="col-md-3">
             <button type="submit" class="btn btn-primary">Filter</button>
-            <a href="{{ route('emails.index') }}" class="btn btn-secondary">Reset</a>
+            <a href="{{ route('emails.penerima', $email_id) }}" class="btn btn-secondary">Reset</a>
         </div>
     </div>
-</form> --}}
+</form>
+
 
 {{-- Table List Anggota --}}
 <form method="POST" action="{{ route('emails.send') }}">
@@ -44,15 +59,55 @@
         </div>
             <div class="card-body p-0">
                 <table class="table table-bordered table-hover m-0">
-                    <thead class="thead-dark">
+                   <thead class="thead-dark">
                         <tr>
                             <th>No</th>
-                            <th width="9%"><input type="checkbox" id="checkAll">Check All</th>
-                            <th>Nama</th>
-                            <th>Email</th>
+                            <th width="9%"><input type="checkbox" id="checkAll"> All</th>
+                            
+                            <!-- Nama -->
+                            <th>
+                                <span>Nama</span>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'nama', 'direction' => 'asc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'nama' && $currentDirection == 'asc' ? 'font-weight: bold;' : '' }}">
+                                    &#9650;
+                                </a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'nama', 'direction' => 'desc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'nama' && $currentDirection == 'desc' ? 'font-weight: bold;' : '' }}">
+                                    &#9660;
+                                </a>
+                            </th>
+
+                            <!-- Email -->
+                            <th>
+                                <span>Email</span>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'email', 'direction' => 'asc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'email' && $currentDirection == 'asc' ? 'font-weight: bold;' : '' }}">
+                                    &#9650;
+                                </a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'email', 'direction' => 'desc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'email' && $currentDirection == 'desc' ? 'font-weight: bold;' : '' }}">
+                                    &#9660;
+                                </a>
+                            </th>
+
+                            <!-- Peminatan -->
                             <th>Peminatan</th>
+
+                            <!-- Level -->
+                            <th>
+                                <span>Level</span>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'level', 'direction' => 'asc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'level' && $currentDirection == 'asc' ? 'font-weight: bold;' : '' }}">
+                                    &#9650;
+                                </a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'level', 'direction' => 'desc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'level' && $currentDirection == 'desc' ? 'font-weight: bold;' : '' }}">
+                                    &#9660;
+                                </a>
+                            </th>
                         </tr>
                     </thead>
+
                     <tbody>
                         @forelse ($anggota as $index => $item)
                             <tr>
@@ -62,10 +117,13 @@
                                 <td>{{ $item->nama }}</td>
                                 <td>{{ $item->email }}</td>
                                 <td>
-                                    @foreach ($item->peminatan as $p)
-                                        <span class="badge badge-info">{{ $p->peminatan }}</span>
-                                    @endforeach
+                                    <div class="">
+                                        @foreach ($item->peminatan as $p)
+                                            <span class="badge badge-info">{{ $p->peminatan }}</span>
+                                        @endforeach
+                                    </div>                                    
                                 </td>
+                                <td>{{ $item->level }}</td>
                             </tr>
                         @empty
                             <tr>

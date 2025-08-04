@@ -96,8 +96,7 @@ class EventsController extends Controller
             $terdaftar = true;
         } else {
             $terdaftar = false;
-        }     
-        return $peserta->count();
+        }             
         if(Auth::user()->role == 'admin'){
             return view('events.show', compact('event', 'terdaftar', 'peserta'));
         }else{

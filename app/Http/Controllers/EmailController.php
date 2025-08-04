@@ -84,29 +84,38 @@ class EmailController extends Controller
     }
 
     public function broadcast(Request $request, $id_event)
-        {
-            $event = Event::findOrFail($id_event);
-            $peminatans = Peminatan::all();
+    {
+        $event = Event::findOrFail($id_event);
+        $peminatans = Peminatan::all();
 
-            $query = Anggota::query();
+        $query = Anggota::query();
 
-            if ($request->filled('peminatan_id')) {
-                $query->whereHas('peminatan', function ($q) use ($request) {
-                    $q->where('peminatan_id', $request->peminatan_id);
-                });
-            }
-
-            if ($request->filled('search')) {
-                $query->where(function ($q) use ($request) {
-                    $q->where('nama', 'like', "%{$request->search}%")
-                    ->orWhere('email', 'like', "%{$request->search}%");
-                });
-            }
-
-            $anggota = $query->with('peminatan')->get();
-
-            return view('emails.broadcast', compact('anggota', 'peminatans', 'event'));
+        if ($request->filled('peminatan_id')) {
+            $query->whereHas('peminatan', function ($q) use ($request) {
+                $q->where('peminatan_id', $request->peminatan_id);
+            });
         }
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama', 'like', "%{$request->search}%")
+                    ->orWhere('email', 'like', "%{$request->search}%");
+            });
+        }
+
+        // Sorting
+        $currentSort = $request->get('sort', 'nama');
+        $currentDirection = $request->get('direction', 'asc');
+
+        if (in_array($currentSort, ['nama', 'email', 'level', 'tanggal']) && in_array($currentDirection, ['asc', 'desc'])) {
+            $query->orderBy($currentSort, $currentDirection);
+        }
+
+        $anggota = $query->with('peminatan')->get();
+
+        return view('emails.broadcast', compact('anggota', 'peminatans', 'event', 'currentSort', 'currentDirection'));
+    }
+
 
     public function preview(Request $request)
     {
@@ -171,15 +180,54 @@ class EmailController extends Controller
                 'image_url' => $picturePath
             ]);
         }
-        
+
         return redirect()->route('emails.penerima', $request->email_id);           
     }
 
     //milih penerima
-    public function list_penerima($email_id){        
-        $anggota = Anggota::all();                     
-        return view('emails.penerima', compact('anggota', 'email_id'));
+    // public function list_penerima($email_id){        
+    //     $anggota = Anggota::all();
+    //     return view('emails.penerima', compact('anggota', 'email_id'));
+    // }
+
+    public function list_penerima(Request $request, $email_id)
+    {
+        $query = Anggota::query();
+
+        // Filter peminatan
+        if ($request->filled('peminatan_id')) {
+            $query->whereHas('peminatan', function ($q) use ($request) {
+                $q->where('peminatan_id', $request->peminatan_id);
+            });
+        }
+
+        // Filter role
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        // Pencarian nama/email
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('sort')) {
+            $direction = $request->get('direction', 'asc');
+            $query->orderBy($request->sort, $direction);
+        }
+
+
+        $anggota = $query->get();
+        $peminatans = Peminatan::all(); // Kirim untuk dropdown
+        $email = EmailHistory::findOrFail($email_id);
+
+        return view('emails.penerima', compact('anggota', 'email_id', 'peminatans'));
     }
+
     
     //kirim email broadcast yang ada di layanan email
     public function send_email(Request $request){
@@ -250,4 +298,14 @@ class EmailController extends Controller
 
             return back()->with('success', 'Email berhasil dikirim ke semua user!');
         }
+
+    public function delete_email($email_id){
+        try{
+            $email = EmailHistory::findOrFail($email_id);
+            $email->delete();
+            return back()->with('success', 'Email dihapus!');
+        }catch(\Exception){
+            return back()->with('error', 'Terjadi Kesalahan');
+        }
+    }
 }

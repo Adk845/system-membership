@@ -403,7 +403,7 @@ return [
 
              'submenu' => [
                 [
-                    'text' => 'Mail List',
+                    'text' => 'Broadcast Email',
                     'url' => '/mail',
                     'icon' => 'far fa-envelope',                    
                     'can' => 'admin-koordinator'

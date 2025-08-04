@@ -45,7 +45,7 @@
                         <option value="" disabled>Pilih jenis peminatan</option>
                         <option value="nonton" {{ $event->jenis_peminatan == 'nonton' ? 'selected' : '' }}>Nonton</option>
                         <option value="seminar" {{ $event->jenis_peminatan == 'seminar' ? 'selected' : '' }}>Seminar</option>
-                        <option value="seminar berbayar" {{ $event->jenis_peminatan == 'seminar berbayar' ? 'selected' : '' }}>Seminar Berbayar</option>
+                        <option value="training development" {{ $event->jenis_peminatan == 'training development' ? 'selected' : '' }}>Training Development</option>
                     </select>
                 </div>
 

@@ -19,10 +19,9 @@ return new class extends Migration
             $table->text('deskripsi')->nullable();
             $table->text('narasumber')->nullable();
             $table->string('jenis_peminatan')->nullable();
-            $table->string('Lokasi')->nullable();
+            $table->string('lokasi')->nullable();
             $table->string('link')->nullable();
-            $table->date('tanggal')->nullable();
-            // $table->time('waktu')->nullable();
+            $table->date('tanggal')->nullable();            
             $table->string('waktu')->nullable();
             $table->string('wilayah_koordinator')->nullable();
             $table->string('gambar')->nullable();

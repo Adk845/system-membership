@@ -33,7 +33,7 @@
                         <option value="" disabled selected>Pilih jenis peminatan</option>
                         <option value="nonton">Nonton</option>
                         <option value="seminar">Seminar</option>
-                        <option value="seminar berbayar">Seminar Berbayar</option>
+                        <option value="training development">Training Development</option>
                     </select>
                 </div>
 

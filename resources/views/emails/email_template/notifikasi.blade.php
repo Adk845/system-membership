@@ -51,9 +51,16 @@
                     <td style="padding: 8px;">: {{ ucfirst($event->jenis_peminatan) }}</td>
                 </tr>
                 @endif
+                @if($event->jenis_peminatan == 'seminar')
+                <tr style="background-color: #f3f4f6;">
+                    <td class="align-top" style="padding: 8px; font-weight: bold;">Narasumber</td>
+                    <td class="align-top" style="padding: 8px;">:</td>
+                    <td class="align-top">{{ $event->narasumber }}</td>
+                </tr>
+                @endif
             </table>
 
-            <p style="margin-top: 20px;">Silakan pantau terus platform kami untuk informasi selengkapnya.</p>
+            <p style="margin-top: 20px;">📲 Untuk informasi lebih lanjut dan pembaruan terkini, silakan pantau platform kami www.member.isolutions.co.id </p>
 
             <p>Hormat kami,</p>
             <p><strong>Membership Isolutions</strong></p>

@@ -91,6 +91,9 @@ Route::middleware('auth')->group(function () {
     Route::post('mail/update/', [EmailController::class, 'update_email'])->name('emails.update');
     //kirim email ke penerima 
     Route::post('mail/send', [EmailController::class, 'send_email'])->name('emails.send');
+    //hapus riwayat email
+    Route::get('mail/delete/{email_id}', [EmailController::class, 'delete_email'])->name('emails.delete');
+    
 
 
 });
