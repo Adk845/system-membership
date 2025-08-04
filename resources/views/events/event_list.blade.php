@@ -34,7 +34,7 @@
                     <option value="">Semua Kategori</option>
                     <option value="nonton" {{ request('category') == 'nonton' ? 'selected' : '' }}>Nonton</option>
                     <option value="seminar" {{ request('category') == 'seminar' ? 'selected' : '' }}>Seminar</option>
-                    <option value="seminar berbayar" {{ request('category') == 'seminar berbayar' ? 'selected' : '' }}>Seminar Berbayar</option>
+                    <option value="training development" {{ request('category') == 'training development' ? 'selected' : '' }}>Training Development</option>
                 </select>
                 <input type="text" name="search" class="form-control mr-2" placeholder="Cari nama event" value="{{ request('search') }}">
                 
@@ -74,7 +74,18 @@
                                 </a>
                             </span>
                         </th>
-                        <th scope="col">Date</th>
+                        {{-- <th scope="col">Date</th> --}}
+                         <th scope="col">
+                            <span>Date</span>
+                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'tanggal', 'direction' => 'asc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'tanggal' && $currentDirection == 'asc' ? 'font-weight: bold;' : '' }}">
+                                &#9650;
+                            </a>
+                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'tanggal', 'direction' => 'desc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'tanggal' && $currentDirection == 'desc' ? 'font-weight: bold;' : '' }}">
+                                &#9660;
+                            </a>
+                        </th>
                         <th scope="col">Time</th>
                         <th scope="col">Category</th>
                         <th scope="col">Actions</th>

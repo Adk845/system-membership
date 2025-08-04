@@ -61,54 +61,62 @@ class AnggotaController extends Controller
     //     }
 
 
-    public function index(Request $request)
-{
-    $query = Anggota::with('user', 'peminatan');
+   public function index(Request $request)
+    {
+        $query = Anggota::with('user', 'peminatan');
 
-    // Search
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('nama', 'like', "%{$search}%")
-              ->orWhere('domisili', 'like', "%{$search}%")
-              ->orWhereHas('user', function ($q2) use ($search) {
-                  $q2->where('email', 'like', "%{$search}%");
-              });
-        });
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                ->orWhere('domisili', 'like', "%{$search}%")
+                ->orWhereHas('user', function ($q2) use ($search) {
+                    $q2->where('email', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        // Filter by peminatan
+        if ($request->filled('peminatan_id')) {
+            $peminatan = $request->peminatan_id;
+            $query->whereHas('peminatan', function ($q) use ($peminatan) {
+                $q->where('peminatan', $peminatan);
+            });
+        }
+
+        // Sorting
+        $sort = $request->get('sort', 'created_at');
+        $direction = $request->get('direction', 'desc');
+        $allowedSorts = ['nama', 'created_at', 'domisili', 'level', 'email'];
+
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'created_at';
+        }
+
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'desc';
+        }
+
+        if ($sort === 'email') {
+            $query->join('users', 'anggotas.user_id', '=', 'users.id')
+                ->orderBy('users.email', $direction)
+                ->select('anggotas.*');
+        } else {
+            $query->orderBy($sort, $direction);
+        }
+
+        // Pagination
+        $perPage = $request->get('per_page', 10);
+        if ($perPage === 'all') {
+            $member = $query->get();
+        } else {
+            $member = $query->paginate((int)$perPage)->appends($request->all());
+        }
+
+        return view('admin.memberlist', compact('member'));
     }
 
-    // Filter by peminatan (many-to-many)
-    if ($request->filled('peminatan_id')) {
-        $peminatan = $request->peminatan_id;
-        $query->whereHas('peminatan', function ($q) use ($peminatan) {
-            $q->where('peminatan', $peminatan);
-        });
-    }
-
-    // Sorting
-    $sort = $request->get('sort', 'created_at');
-    $direction = $request->get('direction', 'desc');
-
-    if (!in_array($sort, ['nama', 'created_at'])) {
-        $sort = 'created_at';
-    }
-
-    if (!in_array($direction, ['asc', 'desc'])) {
-        $direction = 'desc';
-    }
-
-    $query->orderBy($sort, $direction);
-
-    // Pagination
-    $perPage = $request->get('per_page', 10);
-    if ($perPage === 'all') {
-        $member = $query->get();
-    } else {
-        $member = $query->paginate((int)$perPage)->appends($request->all());
-    }
-
-    return view('admin.memberlist', compact('member'));
-}
 
 
 
@@ -133,7 +141,7 @@ class AnggotaController extends Controller
             if($request->nonton){
                 array_push($peminatan, 1);
             }
-            if($request->seminar_berbayar){
+            if($request->training_development){
                 array_push($peminatan, 2);
             }   
             if($request->seminar){
@@ -268,7 +276,7 @@ class AnggotaController extends Controller
                 if(isset($request->seminar)){
                     $anggota->peminatan()->attach(3);
                 }
-                if(isset($request->seminar_berbayar)){
+                if(isset($request->training_development)){
                     $anggota->peminatan()->attach(2);
                 }
 
@@ -311,7 +319,7 @@ class AnggotaController extends Controller
             if($request->seminar){
                 array_push($peminatan, 2);
             }
-            if($request->seminar_berbayar){
+            if($request->training_development){
                 array_push($peminatan, 3);
             }   
         

@@ -94,8 +94,8 @@
                 <label class="form-check-label">Seminar</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="seminar_berbayar" {{ in_array(2, $peminatan) ? 'checked' : '' }}>
-                <label class="form-check-label">Seminar Berbayar</label>
+                <input class="form-check-input" type="checkbox" name="training_development" {{ in_array(2, $peminatan) ? 'checked' : '' }}>
+                <label class="form-check-label">Training Development</label>
             </div>
         </div>
 

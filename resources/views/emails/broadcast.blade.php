@@ -3,8 +3,11 @@
 @section('title', 'Broadcast Email')
 
 @section('content')
+@php
+    $currentSort = request('sort', 'nama');
+    $currentDirection = request('direction', 'asc');
+@endphp
 <h1 class="mb-4">Broadcast Email</h1>
-
 {{-- Filter Form --}}
 <form method="GET" action="{{ route('broadcast.email', $event->id) }}" class="mb-4">
     <input type="hidden" name="event_id" value="{{ $event->id }}">
@@ -47,10 +50,43 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>No</th>
-                        <th width="9%"><input type="checkbox" id="checkAll">Check All</th>
-                        <th>Nama</th>
-                        <th>Email</th>
+                        <th width="9%"><input type="checkbox" id="checkAll">All</th>
+                        <th>
+                            <span>Nama</span>
+                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'nama', 'direction' => 'asc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'nama' && $currentDirection == 'asc' ? 'font-weight: bold;' : '' }}">
+                                &#9650;
+                            </a>
+                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'nama', 'direction' => 'desc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'nama' && $currentDirection == 'desc' ? 'font-weight: bold;' : '' }}">
+                                &#9660;
+                            </a>
+                        </th>
+                        <th>
+                            <span>Email</span>
+                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'email', 'direction' => 'asc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'email' && $currentDirection == 'asc' ? 'font-weight: bold;' : '' }}">
+                                &#9650;
+                            </a>
+                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'email', 'direction' => 'desc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'email' && $currentDirection == 'desc' ? 'font-weight: bold;' : '' }}">
+                                &#9660;
+                            </a>
+                        </th>
+                        {{-- <th>Email</th> --}}
                         <th>Peminatan</th>
+                        <th>
+                            <span>Level</span>
+                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'level', 'direction' => 'asc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'level' && $currentDirection == 'asc' ? 'font-weight: bold;' : '' }}">
+                                &#9650;
+                            </a>
+                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'level', 'direction' => 'desc']) }}"
+                                style="text-decoration: none; {{ $currentSort == 'level' && $currentDirection == 'desc' ? 'font-weight: bold;' : '' }}">
+                                &#9660;
+                            </a>
+                        </th>
+                        {{-- <th>Level</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -66,6 +102,7 @@
                                     <span class="badge badge-info">{{ $p->peminatan }}</span>
                                 @endforeach
                             </td>
+                            <td>{{ $item->level }}</td>
                         </tr>
                     @empty
                         <tr>

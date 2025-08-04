@@ -153,8 +153,8 @@
                                 <input type="checkbox" name="seminar">
                             </div>
                             <div class="pe-4 pt-4 pb-4">
-                                <label for="nonton">Seminar berbayar</label>
-                                <input type="checkbox" name="seminar_berbayar">
+                                <label for="nonton">Training Development</label>
+                                <input type="checkbox" name="training_development">
                             </div>
                         </div>
                     </div>

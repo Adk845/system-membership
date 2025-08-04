@@ -82,7 +82,7 @@ class RegisteredUserController extends Controller
         if(isset($request->seminar)){
             $anggota->peminatan()->attach(3);
         }
-        if(isset($request->seminar_berbayar)){
+        if(isset($request->traning_development)){
             $anggota->peminatan()->attach(2);
         }
 

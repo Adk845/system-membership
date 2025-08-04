@@ -124,8 +124,8 @@
                     <label class="form-check-label">Seminar</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="seminar_berbayar" {{ in_array(2, $peminatan) ? 'checked' : '' }}>
-                    <label class="form-check-label">Seminar Berbayar</label>
+                    <input class="form-check-input" type="checkbox" name="training_development" {{ in_array(2, $peminatan) ? 'checked' : '' }}>
+                    <label class="form-check-label">Training Development</label>
                 </div>
             </div>
             <div class="container"  id="genre_bioskop" data-anggota="{{ $anggota->id }}" data-get_bioskop="{{ route('get_bioskop', $anggota->id) }}" data-get_genre="{{ route('get_genre', $anggota->id) }}">

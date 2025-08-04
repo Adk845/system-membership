@@ -59,7 +59,7 @@
                     <option value="">-- Semua Peminatan --</option>
                     <option value="nonton" {{ request('peminatan_id') == 'nonton' ? 'selected' : '' }}>Nonton</option>
                     <option value="seminar" {{ request('peminatan_id') == 'seminar' ? 'selected' : '' }}>Seminar</option>
-                    <option value="seminar berbayar" {{ request('peminatan_id') == 'seminar berbayar' ? 'selected' : '' }}>Seminar Berbayar</option>
+                    <option value="training development" {{ request('peminatan_id') == 'training development' ? 'selected' : '' }}>Training Development</option>
                 </select>
             </div>
 
@@ -100,9 +100,39 @@
                         </a>
                     </span>
                 </th>
-                <th scope="col">Domisili</th>
-                <th scope="col">Email</th>
-                <th scope="col">Level</th>
+                <!-- Domisili -->
+                <th>
+                    <span>Domisili</span>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'domisili', 'direction' => 'asc', 'page' => 1]) }}">
+                        &#9650;
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'domisili', 'direction' => 'desc', 'page' => 1]) }}">
+                        &#9660;
+                    </a>
+                </th>
+
+                <!-- Email -->
+                <th>
+                    <span>Email</span>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'email', 'direction' => 'asc', 'page' => 1]) }}">
+                        &#9650;
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'email', 'direction' => 'desc', 'page' => 1]) }}">
+                        &#9660;
+                    </a>
+                </th>
+
+                <!-- Level -->
+                <th>
+                    <span>Level</span>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'level', 'direction' => 'asc', 'page' => 1]) }}">
+                        &#9650;
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'level', 'direction' => 'desc', 'page' => 1]) }}">
+                        &#9660;
+                    </a>
+                </th>
+
                 <th scope="col">Peminatan</th>
                 <th scope="col">Action</th>
                 </tr>
