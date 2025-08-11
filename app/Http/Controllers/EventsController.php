@@ -116,15 +116,17 @@ class EventsController extends Controller
 
     public function store(Request $request)
     {
-        try{
-
-            $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+         $request->validate([
+            'nama' => 'string|max:255',
+            'deskripsi' => 'string',
+            'gambar' => 'image|mimes:jpeg,png,jpg|max:2048',
             ]);
-
-            $gambarPath = $request->file('gambar')->store('event_images', 'public');
+            if($request->gambar){
+                $gambarPath = $request->file('gambar')->store('event_images', 'public');
+            }else{
+                $gambarPath = NULL;
+            }
+            
 
             Event::create([
                 'anggota_id' => Auth::user()->anggota->id,
@@ -141,9 +143,12 @@ class EventsController extends Controller
                 'gambar' => $gambarPath,
             ]);
 
-            return redirect()->route('events.index.admin')->with('Success', 'Event berhasil dibuat!');
+            return redirect()->route('events.index.admin')->with('success', 'Event berhasil dibuat!');
+        try{
+
+           
         }catch(\Exception){
-             return redirect()->route('events.index.admin')->with('Error', 'Terjadi Kesalahan');
+             return redirect()->route('events.index.admin')->with('error', 'Terjadi Kesalahan');
         }
     }
 

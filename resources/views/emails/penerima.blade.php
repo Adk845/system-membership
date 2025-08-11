@@ -113,7 +113,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 {{-- <td><input type="checkbox" name="anggota_id[]" value="{{ $item->id }}"></td> --}}
-                                <td><input type="checkbox" name="emails[]" value="{{ $item->email }}"></td>
+                                <td><input type="checkbox" name="emails[]" value="{{ $item->id }}"></td>
                                 <td>{{ $item->nama }}</td>
                                 <td>{{ $item->email }}</td>
                                 <td>

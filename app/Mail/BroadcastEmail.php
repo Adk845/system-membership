@@ -18,16 +18,23 @@ class BroadcastEmail extends Mailable
      */
 
     public $email;
-    public function __construct($email)
+    public $namaPenerima;
+    public function __construct($email, $namaPenerima)
     {
         $this->email = $email;
+        $this->namaPenerima = $namaPenerima;
     }
 
     public function build()
-    {        
+    {
+        $body = str_replace('[nama]', $this->namaPenerima, $this->email->body);
         return $this->subject($this->email->subject)
                     ->view('emails.email_template.broadcast')
-                    ->with(['email' => $this->email]);
+                    ->with(['email' => $this->email,
+                            'body' => $body,
+                            'image' => $this->email->image_url,
+                            'namaPenerima' => $this->namaPenerima
+                            ]);
     }
 
     /**

@@ -17,16 +17,20 @@ class notifikasi extends Mailable
      * Create a new message instance.
      */
     public $event;
-    public function __construct($event)
+    public $nama;
+    public function __construct($event, $nama)
         {
             $this->event = $event;
+            $this->nama = $nama;
         }
 
     public function build()
         {
             return $this->subject('Notifikasi Acara Baru')
                         ->view('emails.email_template.notifikasi')
-                        ->with(['event' => $this->event]);
+                        ->with(['event' => $this->event,
+                                'nama' => $this->nama
+                            ]);
         }
 
     /**

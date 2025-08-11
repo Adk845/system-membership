@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             KotaSeeder::class,
             BioskopSeeder::class,
             UserAnggota::class,
-            EventSeeder::class,
+            // EventSeeder::class,
         ]);
     }
 }

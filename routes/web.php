@@ -74,11 +74,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/broadcast/email/{id_event}', [EmailController::class, 'broadcast'])->name('broadcast.email');
     Route::post('/broadcast/email/send', [EmailController::class, 'broadcastSend'])->name('broadcast.send');
 
+
+    
+    //=======LAYANAN CUSTOM EMAIL BROADCASTING =======//
+    ////////////////////
     //tampilin dashboard awal email 
     Route::get('mail', [EmailController::class, 'index'])->name('emails.index');    
-    ///////////////////////
-    //broadcast create//
-    ////////////////////
     //nampilin form 
     Route::get('mail/create', [EmailController::class, 'create_email'])->name('emails.create');
     //menyimpan draft email sebelum dikirim

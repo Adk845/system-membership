@@ -23,7 +23,11 @@ class EmailController extends Controller
         {
             $user = Auth::user();
             $emails = $user->email_histories;
-            return view('emails.index', compact('emails'));
+            $emails_today = $user->email_histories()->whereDate('created_at', today())->get();
+            $emails_this_month = $user->email_histories()->whereMonth('created_at', today()->month)
+                                                        ->whereYear('created_at', today()->year)
+                                                        ->get();        
+            return view('emails.index', compact('emails', 'emails_today', 'emails_this_month'));
             // // Ambil semua peminatan (untuk filter dropdown)
             // $peminatans = Peminatan::all();
 
@@ -50,8 +54,9 @@ class EmailController extends Controller
             // $anggota = $query->with('peminatan')->get();            
             // return view('emails.index', compact('anggota', 'peminatans'));
         }
+
     /////////////////////////////
-    //=====NOTIFICATION=====
+    //=====NOTIFICATION=========
     ////////////////////////////
 
     public function send_notification($id_event)
@@ -59,27 +64,18 @@ class EmailController extends Controller
         
         try{
             $event = Event::where('id', $id_event)->first();
-            // return $event->jenis_peminatan;
-            
-            $emails = Anggota::whereHas('peminatan', function ($query) use ($event) {
+            $anggota = Anggota::whereHas('peminatan', function ($query) use ($event) {
                 $query->where('peminatan', $event->jenis_peminatan);
-            })->pluck('email');
-            // return view('emails.email_template.notifikasi', compact('event'));
-            // return $emails;
-            // Mail::to('dirosah.ilmahdi@gmail.com')->queue(new notifikasi($event));                        
-            foreach($emails as $email){
-                Mail::to($email)->queue(new notifikasi($event));            
+            })->get();
+            foreach($anggota as $item){
+                Mail::to($item->email)->queue(new notifikasi($event, $item->nama));            
             }
-            // return 'success';
+            
             return back()->with('success', 'Email notifikasi berhasil dikirim.');
         }catch(\Exception){
             return "terjadi kesalahan";
             return back()->with('error', 'Terjadi Kesalahan');
-        }
-        
-        
-        // return $event;
-        // return view('emails.email_template.notifikasi', compact('event'));
+        }                       
         
     }
 
@@ -116,18 +112,76 @@ class EmailController extends Controller
         return view('emails.broadcast', compact('anggota', 'peminatans', 'event', 'currentSort', 'currentDirection'));
     }
 
-
-    public function preview(Request $request)
+    // Fungsi kirim broadcast untuk yang ada di halaman event
+    // Fungsi untuk mengirim email
+   public function broadcastsend(Request $request)
     {
-        $events = Event::latest()->get();
+       try{
+         $request->validate([
+            'event_id' => 'required|exists:events,id',
+            'emails'   => 'required|array|min:1',
+            'emails.*' => 'integer'
+        ]);
 
-        $selectedEvent = null;
-        if ($request->has('event_id')) {
-            $selectedEvent = Event::find($request->event_id);
+        $ids = $request->emails;
+        $anggota = Anggota::whereIn('id', $ids)->get();
+        $event = Event::findOrFail($request->event_id);
+        
+        foreach ($anggota as $item) {
+            Mail::to($item->email)->queue(new BroadcastNotifikasi($event, $item->nama));
         }
 
-        return view('broadcast.preview', compact('events', 'selectedEvent'));
+        // return back()->with('success', 'Broadcast email berhasil dikirim!');
+        return redirect()->route('events.index.admin')->with('success', 'Berhasil mengirimkan broadcast notifikasi');
+       }catch(\Exception){
+        return redirect()->route('events.index.admin')->with('error', 'Terjadi Kesalahan');
+       }
     }
+
+
+
+    // public function sendSingleEmail(Request $request)
+    //     {     
+
+    //         $message = 'ini pesan test dulu';
+    //         Mail::to($request->email)->queue(new SingleMail($message));            
+    //         return back()->with('success', 'Email berhasil dikirim ke semua user!');
+
+    //         // try{
+    //         //     $message = 'ini pesan test dulu';
+    //         //     Mail::to($request->email)->queue(new SingleMail($message));            
+    //         //     return back()->with('success', 'Email berhasil dikirim ke semua user!');
+    //         // } catch(\Exception) {
+    //         //     return back()->with('error', 'Terjadi Kesalahan !');
+    //         // }
+    //         // $message = $request->get('message');
+            
+    //     }
+
+    // public function sendBroadcast(Request $request)
+    //     {
+    //         $users = User::all(); // atau filter tertentu
+    //         $message = $request->get('message');
+
+    //         foreach ($users as $user) {
+    //             Mail::to($user->email)->queue(new BroadcastEmail($message));
+    //         }
+
+    //         return back()->with('success', 'Email berhasil dikirim ke semua user!');
+    //     }
+
+
+    // public function preview(Request $request)
+    // {
+    //     $events = Event::latest()->get();
+
+    //     $selectedEvent = null;
+    //     if ($request->has('event_id')) {
+    //         $selectedEvent = Event::find($request->event_id);
+    //     }
+
+    //     return view('broadcast.preview', compact('events', 'selectedEvent'));
+    // }
 
     //====================================================
     //BUAT CUSTOM EMAIL DAN KIRIM EMAIL ==================
@@ -231,9 +285,12 @@ class EmailController extends Controller
     
     //kirim email broadcast yang ada di layanan email
     public function send_email(Request $request){
+        $ids = $request->emails;
+        $anggota = Anggota::whereIn('id', $ids)->get();
+
         $email_content = EmailHistory::findOrFail($request->email_id);         
-        foreach($request->emails as $email){
-            Mail::to($email)->queue(new BroadcastEmail($email_content));
+        foreach($anggota as $item){
+            Mail::to($item->email)->queue(new BroadcastEmail($email_content, $item->nama));
         }
         $email_content->update([
             'status' => 'Terkirim'
@@ -242,63 +299,7 @@ class EmailController extends Controller
         return redirect()->route('emails.index')->with('success', 'email berhasil terkirim');
     }
 
-
-    // Fungsi kirim broadcast untuk yang ada di halaman event
-    // Fungsi untuk mengirim email
-   public function broadcastsend(Request $request)
-    {
-       try{
-         $request->validate([
-            'event_id' => 'required|exists:events,id',
-            'emails'   => 'required|array|min:1',
-            'emails.*' => 'email'
-        ]);
-
-        $event = Event::findOrFail($request->event_id);
-
-        foreach ($request->emails as $email) {
-            Mail::to($email)->queue(new BroadcastNotifikasi($event));
-        }
-
-        // return back()->with('success', 'Broadcast email berhasil dikirim!');
-        return redirect()->route('events.index.admin')->with('success', 'Berhasil mengirimkan broadcast notifikasi');
-       }catch(\Exception){
-        return redirect()->route('events.index.admin')->with('error', 'Terjadi Kesalahan');
-       }
-    }
-
-
-
-    public function sendSingleEmail(Request $request)
-        {     
-
-            $message = 'ini pesan test dulu';
-            Mail::to($request->email)->queue(new SingleMail($message));            
-            return back()->with('success', 'Email berhasil dikirim ke semua user!');
-
-            // try{
-            //     $message = 'ini pesan test dulu';
-            //     Mail::to($request->email)->queue(new SingleMail($message));            
-            //     return back()->with('success', 'Email berhasil dikirim ke semua user!');
-            // } catch(\Exception) {
-            //     return back()->with('error', 'Terjadi Kesalahan !');
-            // }
-            // $message = $request->get('message');
-            
-        }
-
-    public function sendBroadcast(Request $request)
-        {
-            $users = User::all(); // atau filter tertentu
-            $message = $request->get('message');
-
-            foreach ($users as $user) {
-                Mail::to($user->email)->queue(new BroadcastEmail($message));
-            }
-
-            return back()->with('success', 'Email berhasil dikirim ke semua user!');
-        }
-
+    //fungsi untuk menghapus riwayat email
     public function delete_email($email_id){
         try{
             $email = EmailHistory::findOrFail($email_id);
@@ -308,4 +309,6 @@ class EmailController extends Controller
             return back()->with('error', 'Terjadi Kesalahan');
         }
     }
+
+    
 }

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Anggota;
+use App\Models\User;
 
 class User extends Authenticatable
 {
@@ -65,6 +66,9 @@ class User extends Authenticatable
         return route('member.profile'); // sesuaikan dengan route yang kamu pakai untuk edit profil
     }
 
+    public function adminlte_image(){
+        return asset('images/no_profile.jpg');
+    }
     public function email_histories(){
         return $this->hasMany(EmailHistory::class, 'sent_by');
     }

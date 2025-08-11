@@ -15,7 +15,7 @@ class PeminatanSeeder extends Seeder
     {
           $data = [
             ['peminatan' => 'nonton'],
-            ['peminatan' => 'seminar berbayar'],
+            ['peminatan' => 'training development'],
             ['peminatan' => 'seminar'],
         ];
 

@@ -28,8 +28,8 @@
         </div>
         <div class="card-body">
             <p style="font-size: 30px">{{  \Carbon\Carbon::now()->translatedFormat('F') }}</p>
-            <div class="d-flex align-items-baseline">                
-                <p style="font-size: 50px">0</p>
+            <div class="d-flex align-items-baseline">
+                <p style="font-size: 50px">{{ $emails_this_month->count() }}</p>                
                 <p style="font-weight: bolder">Email</p>
             </div>
             <a href="{{ route('emails.create') }}" class="btn btn-outline-primary">Create Email</a>
@@ -43,7 +43,7 @@
         <div class="card-body">
             <p style="font-size: 30px">{{  \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
             <div class="d-flex align-items-baseline">
-                <p style="font-size: 50px">0</p>
+                <p style="font-size: 50px">{{ $emails_today->count() }}</p>
                 <p style="font-weight: bolder">Email</p>
             </div>
         </div>

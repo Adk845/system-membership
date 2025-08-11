@@ -15,7 +15,7 @@
 
         <!-- Body -->
         <div style="padding: 20px;">
-            <p>Hai,</p>
+            <p><strong>Hai, {{$nama}}</strong></p>
             <p>Kami ingin menginformasikan bahwa akan diadakan acara berikut:</p>
 
             <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
@@ -54,8 +54,7 @@
                 @if($event->jenis_peminatan == 'seminar')
                 <tr style="background-color: #f3f4f6;">
                     <td class="align-top" style="padding: 8px; font-weight: bold;">Narasumber</td>
-                    <td class="align-top" style="padding: 8px;">:</td>
-                    <td class="align-top">{{ $event->narasumber }}</td>
+                    <td class="align-top" style="padding: 8px;">: {{ $event->narasumber }}</td>                    
                 </tr>
                 @endif
             </table>

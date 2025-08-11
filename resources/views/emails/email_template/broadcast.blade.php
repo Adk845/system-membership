@@ -39,15 +39,18 @@
                     <!-- Body -->
                     <tr>
                         <td style="padding:20px; color:#374151; font-size:14px; line-height:1.6;">
-                            {!! $email->body !!}
+                            {{-- {!! $email->body !!} --}}
+                            {!! $body !!}
                         </td>
                     </tr>
 
-                    @if(!empty($email->image_url))
+                    {{-- @if(!empty($email->image_url)) --}}
+                    @if(!empty($image))
                     <!-- Banner Gambar -->
                     <tr>
                         <td style="padding:0 20px 20px 20px;">
-                            <img src="{{ asset('storage/' . $email->image_url) }}" alt="Gambar" style="width:100%; border-radius:6px; display:block;">
+                            {{-- <img src="{{ asset('storage/' . $email->image_url) }}" alt="Gambar" style="width:100%; border-radius:6px; display:block;"> --}}
+                            <img src="{{ asset('storage/' . $image) }}" alt="Gambar" style="width:100%; border-radius:6px; display:block;">
                         </td>
                     </tr>
                     @endif

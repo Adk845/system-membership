@@ -13,7 +13,7 @@
     <div class="row">
         {{-- Kiri: Kartu Member --}}
         <div class="col-md-5 col-left">
-            <div class="member-card" style="background-image: url('{{ asset('images/depan.png   ') }}');">
+            <div class="member-card" style="background-image: url('{{ asset('images/depan.png') }}');">
                 <div class="overlay">
                     <div style="position: absolute; 
                                 top: 50%; 
