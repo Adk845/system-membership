@@ -203,6 +203,9 @@ class AnggotaController extends Controller
 
 
                 if($request->password){
+                    $user->update([
+                         'password' => Hash::make($request->password)
+                    ]);
                     return redirect()->route('member.profile')->with('success', 'Profil dan Password berhasil diperbarui!');
                 }else {
                     return redirect()->route('member.profile')->with('success', 'Profil berhasil diperbarui!');
@@ -260,6 +263,8 @@ class AnggotaController extends Controller
                     'domisili' => $request->domisili,
                     'tanggal_lahir' => $request->tanggal_lahir,
                     'genre' => $request->genre,
+                    'level' => $request->role == 'admin' ? 'super admin' : $request->role,
+                    'akses_level' => $request->role == 'admin' ? 'super admin' : $request->role,
                     'foto' => $fotoPath
                 ]);
 
@@ -339,8 +344,8 @@ class AnggotaController extends Controller
                 'email' => $request->email,
                 'nomor' => $request->nomor,
                 'genre' => $request->genre,
-                'level' => $request->role,
-                'akses_level' => $request->role,
+                'level' => $request->role == 'admin' ? 'super admin' : $request->role,
+                'akses_level' => $request->role == 'admin' ? 'super admin' : $request->role,
                 'domisili' => $request->domisili,       
             ]);
 

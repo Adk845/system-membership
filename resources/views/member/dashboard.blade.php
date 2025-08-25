@@ -26,7 +26,7 @@
                         
                         {{-- <h4>{{ str_pad($anggota->id, 4, '0', STR_PAD_LEFT) }}</h4> --}}
                         <h4 style="margin-bottom: 5px; font-size: 30px; color: #e7c47b; font-family: 'Poppins', sans-serif; font-weight: normal;">{{ $anggota->nama }}</h4>
-                        <h4>{{ ucfirst($anggota->level) }}</h4>
+                        <h4>{{ ucwords($anggota->level) }}</h4>
                         {{-- Nomor unik kartu --}}
                         <p style="font-size: 16px; color: #fff; font-weight: 400; margin: 0; color: #e7c47b;">
                         {{ str_pad($user->id, 6, '0', STR_PAD_LEFT) }}
@@ -89,7 +89,8 @@
                             <tr class="baris">
                                 <td class="title-data">Status Keanggotaan</td>
                                 <td>:</td>
-                                <td style="font-weight: 600"> {{ ucfirst($user->role) }}</td>
+                                <td style="font-weight: 600">{{ ucwords($anggota->level) }}</td>
+                                {{-- <td style="font-weight: 600"> {{ ucfirst($user->role) }}</td> --}}
                             </tr>
                             <tr class="baris">
                                 <td class="title-data">Domisili</td>
