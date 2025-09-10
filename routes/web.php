@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\crmController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -94,8 +95,18 @@ Route::middleware('auth')->group(function () {
     Route::post('mail/send', [EmailController::class, 'send_email'])->name('emails.send');
     //hapus riwayat email
     Route::get('mail/delete/{email_id}', [EmailController::class, 'delete_email'])->name('emails.delete');
-    
 
+    
+    // ===================CRM BROADCASTING=======================
+    Route::get('/crm', [crmController::class, 'index'])->name('crm.index');
+    Route::get('crm/create', [crmController::class, 'create'])->name('crm.create');
+    Route::post('crm/store', [crmController::class, 'store'])->name('crm.store');
+    Route::get('crm/edit/{id}', [crmController::class, 'edit'])->name('crm.edit');
+    Route::post('crm/update', [crmController::class, 'update'])->name('crm.update');
+    Route::get('crm/destroy/{id}', [crmController::class, 'destroy'])->name('crm.destroy');
+    Route::get('crm/write', [crmController::class, 'write'])->name('crm.write');
+    Route::get('crm/store_mail', [crmController::class, 'store_mail'])->name('crm.store_mail');
+    Route::get('crm/recipients/{id}', [crmController::class, 'recipients'])->name('crm.recipients');
 
 });
 require __DIR__.'/auth.php';

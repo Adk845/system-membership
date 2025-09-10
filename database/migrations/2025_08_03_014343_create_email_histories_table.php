@@ -19,6 +19,7 @@ return new class extends Migration
             $table->longText('body')->nullable();
             $table->text('image_url')->nullable();
             $table->string('status')->default('pending');
+            $table->enum('category', ['crm', 'broadcast'])->nullable();
             $table->text('error_message')->nullable();            
             $table->timestamps();
         });

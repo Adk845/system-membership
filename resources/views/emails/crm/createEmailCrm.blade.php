@@ -11,11 +11,11 @@
     }
     </style>
 @endpush
-<h1>Buat Email Baru</h1>
+<h1>Write Email</h1>
 
 <div class="card shadow-lg border-0 rounded-lg col p-0 mx-2">
     <div class="card-body">
-        <form action="{{ route('emails.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('crm.store_mail') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="category" value="broadcast">
             <div class="form-group">
@@ -46,7 +46,7 @@
                 @endforeach
             </div> --}}
 
-            <button type="submit" class="btn btn-primary">Pilih Penerima</button>
+            <button type="submit" class="btn btn-primary">Choose Recipients</button>
         </form>
     </div>
 

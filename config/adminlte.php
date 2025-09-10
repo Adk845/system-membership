@@ -408,6 +408,12 @@ return [
                     'icon' => 'far fa-envelope',                    
                     'can' => 'admin-koordinator'
                 ],
+                [
+                    'text' => 'CRM Contacts (under develop)',
+                    'url' => '/crm',
+                    'icon' => 'far fa-envelope',                    
+                    'can' => 'admin-koordinator'
+                ],
                 // [
                 //     'text' => 'Koordinator List',
                 //     'url' => '',

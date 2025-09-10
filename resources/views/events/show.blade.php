@@ -79,7 +79,7 @@
                                     <td class="align-top text-muted"><i class="fas fa-map-marker-alt"></i></td>
                                     <td class="align-top text-muted">Lokasi</td>
                                     <td class="align-top text-muted">:</td>
-                                    <td class="align-top"><strong>{{ $event->Lokasi }}</strong></td>
+                                    <td class="align-top"><strong>{{ $event->lokasi }}</strong></td>
                                 </tr>
                                 <tr>
                                     <td class="align-top text-muted"><i class="fas fa-calendar-alt"></i></td>

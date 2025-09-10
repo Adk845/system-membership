@@ -42,8 +42,8 @@
                         <h5 class="card-title text-primary">{{ $event->nama }}</h5>
                         <p class="card-text text-muted mb-1"><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($event->tanggal)->format('d M Y') }} | <i class="fas fa-clock"></i> {{ $event->waktu }}</p>
                         {{-- <p class="card-text text-muted mb-1"><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($event->tanggal)->format('d M Y') }} | <i class="fas fa-clock"></i> {{ \Carbon\Carbon::parse($event->waktu)->format('H:i') }}</p> --}}
-                        <p class="card-text mb-2"><i class="fas fa-map-marker-alt"></i> {{ $event->Lokasi }}</p>
-                        <p class="card-text" style="min-height:60px;">{{ Str::limit($event->deskripsi, 80) }}</p>
+                        <p class="card-text mb-2"><i class="fas fa-map-marker-alt"></i> {{ $event->lokasi }}</p>
+                        {{-- <p class="card-text" style="min-height:60px;">{{ Str::limit($event->deskripsi, 80) }}</p> --}}
                         <div class="mt-auto">
                             <span class="badge bg-info text-dark mb-2">{{ $event->jenis_peminatan }}</span>
                             <a href="{{ route('events.show', $event->id) }}" class="btn btn-outline-primary btn-sm w-100 mb-2">Detail Event</a>
