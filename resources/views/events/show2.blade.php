@@ -10,15 +10,6 @@
 <body>
     <div class="container mt-5">
     <div class="card shadow-lg border-0 rounded-lg">
-        {{-- @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif --}}
 
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
@@ -116,34 +107,6 @@
                         </a>
                         @endif
                     </div>
-
-                    <div>
-                        <form action="{{ route('register2') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="event_id" value="{{ $event->id }}">
-                            <div class="form-group">
-                                <label class="form-label" for="name">Nama</label>
-                                <input class="form-control" type="text" id="name" name="name">
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label" for="email">Email</label>
-                                <input class="form-control" type="email" id="email" name="email">
-                                @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label" for="nomor">Nomor Telepon</label>
-                                <input class="form-control" type="text" id="nomor" name="nomor">
-                            </div>
-                            <button class="btn btn-success" type="submit">Daftar</button>
-                        </form>
-                    </div>
             </div>
         </div>
 
@@ -174,7 +137,10 @@
 
                     <div class="form-group">
                         <label class="form-label" for="email">Email</label>
-                        <input class="form-control" type="email" id="email" name="email">                       
+                        <input class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" type="email" id="email" name="email">
+                        @error('email')
+                            <span class="text-danger">{{ $message }}</span>                                    
+                        @enderror                       
                     </div>
 
                     <div class="form-group">
@@ -184,6 +150,9 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button class="btn btn-success" type="submit">Daftar</button>
+                @error('email')
+                <a class="btn btn-danger" href="{{ route('login', ['event' => $event->id]) }}">Login</a>
+                @enderror
                 {{-- <a href="{{ route('register', ['event' => $event->id]) }}">Belum Punya Akun</a>
                 <button type="submit" class="btn btn-primary">Login</button> --}}
             </div>
@@ -209,10 +178,10 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 
-    {{-- @if ($errors->any())
+    @if ($errors->any())
         <script>
         $('#loginModal').modal('show');
         </script>
-    @endif --}}
+    @endif
 </body>
 </html>

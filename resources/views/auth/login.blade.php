@@ -93,7 +93,7 @@
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
-
+            <input type="hidden" value="{{ $event }}" name="event">
             <!-- Email Address -->
             <div class="form-group">
                 <label for="email">Email</label>

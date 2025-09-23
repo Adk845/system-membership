@@ -124,7 +124,13 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-        ]);
+        ],
+        [
+            'email.unique' => 'Email ini sudah terdaftar, silahkan login untuk mendaftar jika sudah punya akun',
+            'email.email'    => 'Format email harus benar, contoh: nama@mail.com.',
+        ]
+    
+    );
         $event = Event::findOrFail($request->event_id);
         // return $event;
         $user = User::create([
