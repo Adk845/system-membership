@@ -121,16 +121,17 @@ class RegisteredUserController extends Controller
 
     public function register2(Request $request){
         // return $request;
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-        ],
-        [
-            'email.unique' => 'Email ini sudah terdaftar, silahkan login untuk mendaftar jika sudah punya akun',
-            'email.email'    => 'Format email harus benar, contoh: nama@mail.com.',
-        ]
+        $request->validate(
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            ],
+            [
+                'email.unique' => 'Email ini sudah terdaftar, silahkan login untuk mendaftar jika sudah punya akun',
+                'email.email'    => 'Format email harus benar, contoh: nama@mail.com.',
+            ]
     
-    );
+        );
         $event = Event::findOrFail($request->event_id);
         // return $event;
         $user = User::create([
@@ -148,7 +149,7 @@ class RegisteredUserController extends Controller
 
         $anggota->eventsJoined()->syncWithoutDetaching([$request->event_id]);
         Mail::to($anggota->email)->queue(new daftarDanRegister($anggota, $event));
-        return redirect()->back()->with('success', 'anda berhasil teradaftar');
+        return redirect()->back()->with('success', 'anda telah berhasil mendaftar event ini, silahkan cek email untuk informasi lebih lanjut');
     }
 
     public function test2(){
