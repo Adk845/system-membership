@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\auth\RegisteredUserController;
 use App\Http\Controllers\crmController;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,6 +30,7 @@ Route::get('/login', function () {
 // Route::get('/dashboard', function () {
 //     return view('member.dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -109,4 +111,10 @@ Route::middleware('auth')->group(function () {
     Route::get('crm/recipients/{id}', [crmController::class, 'recipients'])->name('crm.recipients');
 
 });
+
+//SHOW EVENT UNTUK DILUAR ADMIN
+    Route::get('/admin/events/show/{id}', [EventsController::class, 'show2'])->name('events.show2');
+    Route::post('/register2', [RegisteredUserController::class, 'register2'])->name('register2');
+    Route::get('/test2', [RegisteredUserController::class, 'test2'])->name('test2');
+
 require __DIR__.'/auth.php';

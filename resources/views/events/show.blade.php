@@ -1,3 +1,4 @@
+
 @extends('adminlte::page')
 
 @section('title', $event->nama)
@@ -35,8 +36,11 @@
             <!-- Konten -->
             <div class="col-md-7">
                 <div class="card-body">
-                    <div class="">
-                        <h5 class="font-weight-bold text-primary">{{ $event->nama }}</h5>                        
+                    <div class="d-flex justify-content-between">
+                        <h5 class="font-weight-bold text-primary">{{ $event->nama }}</h5>   
+                        <div>
+                            <button class="btn btn-success"  onclick="copyEventLink('{{ route('events.show2', $event->id) }}')" >Share Event Link</button>
+                        </div>                     
                     </div>                    
                     <hr>            
                     <p><strong>Deskripsi:</strong></p>
@@ -165,4 +169,18 @@
     </div>
 
 </div>
+
+@push('js')
+    <script>
+        function copyEventLink(link) {
+            navigator.clipboard.writeText(link)
+            .then(() => {
+                alert("Link berhasil disalin: " + link);
+            })
+            .catch(err => {
+                console.error("Gagal menyalin: ", err);
+            });
+        }
+    </script>
+@endpush
 @endsection

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Kota;
+use App\Models\Event;
+use App\Models\Anggota;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -12,6 +14,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+
+use App\Mail\daftarDanRegister;
+use Illuminate\Support\Facades\Mail;
 
 class RegisteredUserController extends Controller
 {
@@ -23,7 +28,7 @@ class RegisteredUserController extends Controller
         $domisili = Kota::pluck('nama_kota', 'id');        
         return view('auth.register', compact('domisili'));
     }
-
+    
     /**
      * Handle an incoming registration request.
      *
@@ -106,4 +111,45 @@ class RegisteredUserController extends Controller
         // Default redirect jika role tidak ditemukan
         return redirect(RouteServiceProvider::HOME); 
     }
+
+
+    public function create2(): View
+    {
+        $domisili = Kota::pluck('nama_kota', 'id');        
+        return view('auth.register2', compact('domisili'));
+    }
+
+    public function register2(Request $request){
+        // return $request;
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        ]);
+        $event = Event::findOrFail($request->event_id);
+        // return $event;
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make('123456789'),
+            'role' => 'member',
+        ]);
+
+         $anggota = $user->anggota()->create([
+            'nama' => $request->name,            
+            'email' => $request->email,
+            'nomor' => $request->nomor,            
+        ]);
+
+        $anggota->eventsJoined()->syncWithoutDetaching([$request->event_id]);
+        Mail::to($anggota->email)->queue(new daftarDanRegister($anggota, $event));
+        return redirect()->back()->with('success', 'anda berhasil teradaftar');
+    }
+
+    public function test2(){
+        $event = Event::findOrFail(2);
+        $anggota = Anggota::findOrFail(3);
+
+        return view('emails.email_template.registerdandaftar', compact('event', 'anggota'));
+    }
+
 }

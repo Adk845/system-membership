@@ -6,6 +6,7 @@ use App\Mail\BroadcastEmail;
 use App\Mail\BroadcastNotifikasi;
 use App\Mail\SingleMail;
 use App\Mail\notifikasi;
+use App\Mail\daftarDanRegister;
 use App\Models\Anggota;
 use App\Models\EmailHistory;
 use Illuminate\Http\Request;
@@ -58,6 +59,12 @@ class EmailController extends Controller
     /////////////////////////////
     //=====NOTIFICATION=========
     ////////////////////////////
+
+     //UNTUK DAFTAR DAN REGISTER , PENDAFTAR DI LUAR LOGIN
+    public function daftarDanRegister()
+    {
+
+    }
 
     public function send_notification($id_event)
     {
@@ -310,5 +317,6 @@ class EmailController extends Controller
         }
     }
 
+   
     
 }

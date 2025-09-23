@@ -106,6 +106,10 @@ class EventsController extends Controller
             return redirect()->back()->with('error', 'terjadi kesalahan tidak dapat menampilkan');
        }
                        
+    }
+    public function show2($id){
+        $event = Event::findOrFail($id);
+        return view('events.show2', compact('event'));
     }   
 
     public function create()
@@ -232,10 +236,17 @@ class EventsController extends Controller
            try{
                 $anggota = Auth::user()->anggota;
                 $anggota->eventsJoined()->syncWithoutDetaching([$event_id]);
-                return redirect()->back()->with('success', "Anda telah terdaftar pada event ini");
+                // return redirect()->back()->with('success', "Anda telah terdaftar pada event ini");
+                return redirect()->route('events.show', $event_id)->with('success', "Anda telah terdaftar pada event ini");
            }catch(\Exception){
-                return redirect()->back()->with('error', "Terjadi kesalahan");
+                // return redirect()->back()->with('error', "Terjadi kesalahan");
+                return redirect()->route('events.show', $event_id)->with('error', "Terjadi kesalahan");
            }            
+        }
+
+        //===========REGISTER DARI LUAR =========
+        public function register2($event_id){
+            return redirect()->route('login');
         }
 
         public function batalkan($event_id){
