@@ -259,4 +259,14 @@ class EventsController extends Controller
            }            
         }
 
+        //=======DAFTAR EVENT YANG TELAH DIDAFTAR======
+
+
+        public function eventAktif(){
+            $user = Auth::user();
+            $anggota = $user->anggota;
+            $events = $anggota->eventsJoined;
+            
+            return view('member.eventTerdaftar', compact('events'));
+        }
 }

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
-use App\Mail\daftarDanRegister;
+use App\Mail\DaftarDanRegister;
 use Illuminate\Support\Facades\Mail;
 
 class RegisteredUserController extends Controller
