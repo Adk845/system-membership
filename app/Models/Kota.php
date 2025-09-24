@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Kota extends Model
 {
     use HasFactory;
-    protected $table = 'kota';
+    protected $table = 'Kota';
     protected $guarded = [];
 
     public function bioskop() {

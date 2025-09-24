@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EventsController;
-use App\Http\Controllers\auth\RegisteredUserController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\crmController;
 use Illuminate\Support\Facades\Auth;
 
@@ -66,6 +66,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/events/{id}/edit', [EventsController::class, 'edit'])->name('events.edit');
     Route::post('/admin/events/edit', [EventsController::class, 'update'])->name('events.update');
     Route::get('/admin/events/{id}/delete', [EventsController::class, 'delete'])->name('events.delete');
+
+    Route::get('/events/registered/active', [EventsController::class, 'eventAktif'])->name('events.registered.aktif');
+
 
     //event register
     Route::get('/events/register/{id_event}', [EventsController::class, 'register'])->name('events.register');
